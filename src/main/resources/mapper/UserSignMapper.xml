@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.UserSignMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.UserSign">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="last_sign_time" jdbcType="DATE" property="lastSignTime" />
+    <result column="accumulate_sign" jdbcType="INTEGER" property="accumulateSign" />
+  </resultMap>
+
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.UserSign" useGeneratedKeys="true">
+    insert into user_sign (user_account, last_sign_time, accumulate_sign
+      )
+    values (#{userAccount,jdbcType=VARCHAR}, #{lastSignTime,jdbcType=DATE}, #{accumulateSign,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.UserSign">
+    update user_sign
+    set
+      last_sign_time = #{lastSignTime,jdbcType=DATE},
+      accumulate_sign = #{accumulateSign,jdbcType=INTEGER}
+    where user_account = #{userAccount} and accumulate_sign = #{oldAccumulateSign}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select id, user_account, last_sign_time, accumulate_sign
+    from user_sign
+    where user_account = #{account}
+  </select>
+
+</mapper>

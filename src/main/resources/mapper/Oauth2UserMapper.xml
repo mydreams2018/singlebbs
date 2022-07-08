@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.Oauth2UserMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.Oauth2User">
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="provider_id" jdbcType="VARCHAR" property="providerId" />
+    <result column="access_token" jdbcType="VARCHAR" property="accessToken" />
+    <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
+    <result column="expire_time" jdbcType="BIGINT" property="expireTime" />
+    <result column="register_time" jdbcType="DATE" property="registerTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="cn.kungreat.singlebbs.domain.Oauth2User">
+    insert into oauth2_user (user_account, provider_id, access_token, 
+      refresh_token, expire_time, register_time, 
+      open_id)
+    values (#{userAccount,jdbcType=VARCHAR}, #{providerId,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, 
+      #{refreshToken,jdbcType=VARCHAR}, #{expireTime,jdbcType=BIGINT}, #{registerTime,jdbcType=DATE}, 
+      #{openId,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.Oauth2User">
+    update oauth2_user
+    set
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      refresh_token = #{refreshToken,jdbcType=VARCHAR},
+      expire_time = #{expireTime,jdbcType=BIGINT}
+    where open_id = #{openId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select user_account, provider_id, access_token, refresh_token, expire_time, register_time,
+    open_id
+    from oauth2_user
+    where open_id = #{openId}
+  </select>
+</mapper>

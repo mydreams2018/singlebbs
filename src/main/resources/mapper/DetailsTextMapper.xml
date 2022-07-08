@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.DetailsTextMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.DetailsText">
+    <id column="id" property="id" />
+    <result column="is_adoption" property="isAdoption" />
+    <result column="like_number" property="likeNumber" />
+    <result column="port_id" property="portId" />
+    <result column="user_account" property="userAccount" />
+    <result column="create_data" property="createData" />
+    <result column="auth_flag" property="authFlag" />
+    <result column="details_text" property="detailsText" />
+    <result column="is_port" property="isPort" />
+    <result column="reply_parent" property="replyParent" />
+    <result column="like_account" property="likeAccount" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="img" jdbcType="VARCHAR" property="userImg" />
+    <result column="vip_level"  property="vipLevel"/>
+    <result column="authenticate"  property="authenticate" />
+    <result column="is_manager"  property="isManager" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="cn.kungreat.singlebbs.query.DetailsTextQuery">
+    delete from ${tableName}
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.DetailsText" useGeneratedKeys="true">
+    insert into ${tableName} (like_number,is_adoption ,port_id,
+      user_account, create_data, auth_flag,
+      details_text, is_port,reply_parent)
+    values (0, 0,#{portId},
+      #{userAccount}, #{createData}, #{authFlag},
+      #{detailsText}, #{isPort}, #{replyParent})
+  </insert>
+    <update id="updateByPrimaryKey">
+    update ${tableName}
+    set
+      details_text = #{detailsText,jdbcType=LONGVARCHAR},
+      auth_flag = #{authFlag}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPortId">
+    update ${tableName}
+    set
+      details_text = #{detailsText,jdbcType=LONGVARCHAR},
+      auth_flag = #{authFlag}
+    where port_id = #{portId} and is_port=1
+  </update>
+
+    <update id="updateLikeAccount">
+       update ${tableName}
+    set
+      like_account = #{likeAccount},
+      like_number = like_number+1
+    where id = #{id,jdbcType=BIGINT} and like_number=#{likeNumber}
+    </update>
+
+  <update id="updateAdoption">
+    update ${tableName}
+    set
+      is_adoption = 1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
+    details_text, is_port
+    from ${tableName}
+    where id = #{id,jdbcType=BIGINT} and auth_flag = #{portIsauth}
+  </select>
+
+  <select id="selectByPort" parameterType="cn.kungreat.singlebbs.domain.DetailsText" resultMap="BaseResultMap">
+    select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
+    details_text, is_port
+    from  ${tableName}  where port_id = #{portId} and is_port=1 and auth_flag = #{portIsauth}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(id) from ${tableName}
+    <include refid="baseQuery"/>
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
+    details_text, is_port,reply_parent
+    from ${tableName} <include refid="baseQuery"/> <include refid="baseOrder"/> limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectChildAnswer" resultMap="BaseResultMap">
+    select * from (select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
+    details_text, is_port,reply_parent
+    from ${tableName} where find_in_set(id,get_child_list(#{replyIds})) and is_port!=1
+        <if test="portIsauth != 0">
+          and auth_flag = 1
+        </if>
+       <include refid="baseOrder"/> )
+    as portDetails Inner join user us on portDetails.user_account = us.account
+  </select>
+
+  <select id="selectLikeAccount" resultMap="BaseResultMap">
+    select like_account,like_number from ${tableName} where id=#{id}
+  </select>
+
+  <select id="lastReplyPort" resultMap="cn.kungreat.singlebbs.mapper.ReportMapper.BaseResultMap">
+        select id, port_title,is_essence, reply_number, create_time, class_id,create_data from (
+        (select t2.id, t2.port_title,t2.is_essence, t2.reply_number, t2.create_time,t1.port_id,t1.create_data,'4' as class_id
+        from (select port_id,create_data from details_text_talk where user_account = #{userAccount} and auth_flag = #{portIsauth} and is_port!=1
+          ORDER BY create_data DESC limit 0,10) t1 join report_talk t2 on t1.port_id = t2.id ORDER BY t1.create_data DESC )
+        UNION ALL
+        (select t2.id, t2.port_title,t2.is_essence, t2.reply_number, t2.create_time,t1.port_id,t1.create_data,'3' as class_id
+        from (select port_id,create_data from details_text_data where user_account = #{userAccount} and auth_flag = #{portIsauth} and is_port!=1
+          ORDER BY create_data DESC limit 0,10) t1 join report_data t2 on t1.port_id = t2.id ORDER BY t1.create_data DESC )
+        UNION ALL
+         (select t2.id, t2.port_title,t2.is_essence, t2.reply_number, t2.create_time,t1.port_id,t1.create_data,'2' as class_id
+        from (select port_id,create_data from details_text_front where user_account = #{userAccount} and auth_flag = #{portIsauth} and is_port!=1
+          ORDER BY create_data DESC limit 0,10) t1 join report_front t2 on t1.port_id = t2.id ORDER BY t1.create_data DESC )
+        UNION ALL
+         (select t2.id, t2.port_title,t2.is_essence, t2.reply_number, t2.create_time,t1.port_id,t1.create_data,'1' as class_id
+        from (select port_id,create_data from details_text_back where user_account = #{userAccount} and auth_flag = #{portIsauth} and is_port!=1
+          ORDER BY create_data DESC limit 0,10) t1 join report_back t2 on t1.port_id = t2.id ORDER BY t1.create_data DESC )
+        ) rt ORDER BY rt.create_data DESC limit 0,10
+  </select>
+
+  <sql id="baseQuery">
+    where reply_parent is null
+      <if test="portId != null">
+        and port_id = #{portId} and is_port!=1
+      </if>
+      <if test="portIsauth != 0">
+        and auth_flag = 1
+      </if>
+  </sql>
+
+  <sql id="baseOrder">
+    <if test="orderType != null and orderType != ''">
+      ORDER BY ${orderType} DESC
+    </if>
+  </sql>
+</mapper>

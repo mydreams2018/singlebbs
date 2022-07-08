@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.UserCollectMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.UserCollect">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="port_id" jdbcType="BIGINT" property="portId" />
+    <result column="collect_time" jdbcType="DATE" property="collectTime" />
+    <result column="port_title" jdbcType="VARCHAR" property="portTitle" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey">
+    delete from user_collect
+    where id = #{id} and user_account = #{account}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.UserCollect" useGeneratedKeys="true">
+    insert into user_collect (user_account, class_id, port_id, 
+      collect_time,port_title)
+    values (#{userAccount,jdbcType=VARCHAR}, #{classId,jdbcType=INTEGER}, #{portId,jdbcType=BIGINT}, 
+      #{collectTime,jdbcType=DATE},#{portTitle})
+  </insert>
+  <select id="selectByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.UserCollect" resultMap="BaseResultMap">
+    select id, user_account, class_id, port_id, collect_time, port_title
+    from user_collect
+    where user_account = #{userAccount} and class_id = #{classId}
+            and port_id=#{portId}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, user_account, class_id, port_id, collect_time, port_title
+    from user_collect where user_account=#{userAccount} limit #{start},#{pageSize}
+  </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(id)  from user_collect where user_account=#{userAccount}
+    </select>
+</mapper>

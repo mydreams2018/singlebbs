@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.PermissionMappingMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.PermissionMapping">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="descript" jdbcType="VARCHAR" property="descript" />
+  </resultMap>
+
+  <insert id="insertBatch">
+    insert into permission_mapping (account, descript) values
+      <foreach collection="ps" item="var" separator=",">
+        (#{account},#{var})
+      </foreach>
+  </insert>
+
+  <delete id="deleteByAccount">
+    delete from permission_mapping WHERE account = #{0}
+  </delete>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, account, descript
+    from permission_mapping
+    where account = #{0}
+  </select>
+</mapper>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.ReportMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.Report">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="port_title" jdbcType="VARCHAR" property="name" />
+    <result column="experience" jdbcType="TINYINT" property="experience" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="is_essence" jdbcType="BIT" property="isEssence" />
+    <result column="port_state" jdbcType="VARCHAR" property="portState" />
+    <result column="is_top" jdbcType="BIT" property="isTop" />
+    <result column="reply_number" jdbcType="TINYINT" property="replyNumber" />
+    <result column="look_number" jdbcType="TINYINT" property="lookNumber" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
+    <result column="auth_flag" jdbcType="BIT" property="authFlag" />
+    <result column="class_id" property="classId" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="img" jdbcType="VARCHAR" property="userImg" />
+    <result column="vip_level"  property="vipLevel"/>
+    <result column="authenticate"  property="authenticate" />
+    <result column="is_manager"  property="isManager" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ${tableName}
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.Report" useGeneratedKeys="true">
+    insert into ${tableName} (port_title,
+       experience, user_account,
+      port_state,
+      reply_number, look_number, create_time, 
+      auth_flag,is_essence,is_top)
+    values (#{name,jdbcType=VARCHAR}, #{experience,jdbcType=TINYINT}, #{userAccount},
+      '未结',
+      0, 0, #{createTime,jdbcType=DATE}, #{authFlag},0,0)
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.Report">
+    update ${tableName}
+    set port_title = #{name,jdbcType=VARCHAR},
+        auth_flag = #{authFlag}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <update id="incrementNumber">
+      update ${tableName} set reply_number = reply_number + 1 where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="decrementNumber">
+      update ${tableName} set reply_number = reply_number - 1 where id = #{id,jdbcType=BIGINT}
+    </update>
+
+  <update id="updateBystate">
+    update ${tableName} set port_state = #{portState,jdbcType=VARCHAR}  where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.Report" resultMap="BaseResultMap">
+    SELECT * FROM (select id, port_title, experience, user_account, is_essence,
+    port_state, is_top, reply_number, look_number, create_time, auth_flag
+    from ${tableName}
+    where id = #{id} and auth_flag = #{portIsauth}
+    ) as port Inner join user us on port.user_account = us.account
+  </select>
+
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(id) from ${tableName}
+    <include refid="baseQuery"/>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from (select id, port_title, experience, user_account, is_essence,
+    port_state, is_top, reply_number, look_number, create_time, auth_flag
+    from ${tableName} <include refid="baseQuery"/> <include refid="baseOrder"/> limit #{start},#{pageSize})
+    as port Inner join user us on port.user_account = us.account
+  </select>
+
+  <select id="selectById" resultMap="BaseResultMap">
+    select id, port_title,  experience, user_account, is_essence,
+    port_state, is_top, reply_number, look_number, create_time, auth_flag
+    from ${tableName}
+    where id = #{id}
+  </select>
+
+  <select id="lastSendPort" resultMap="BaseResultMap">
+    select id, port_title, experience, user_account, is_essence,
+    port_state, is_top, reply_number, look_number, create_time, auth_flag, ${classId} as class_id
+    from ${tableName}
+    where user_account = #{userAccount} and auth_flag = #{portIsauth}
+    ORDER BY create_time DESC
+    limit 0,10
+  </select>
+
+  <select id="mySelectCount" resultType="java.lang.Integer">
+  select sum(rt.num) from (
+    select count(id) as num from report_back where user_account = #{userAccount} and auth_flag = 1
+    UNION ALL
+    select count(id) as num from report_front where user_account = #{userAccount} and auth_flag = 1
+    UNION ALL
+    select count(id) as num from report_data where user_account = #{userAccount} and auth_flag = 1
+    UNION ALL
+    select count(id) as num from report_talk where user_account = #{userAccount} and auth_flag = 1) rt
+  </select>
+
+  <select id="mySelectAll" resultMap="BaseResultMap">
+     select id, port_title, is_essence,is_top, reply_number, look_number, create_time, class_id
+     from (
+     select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+     '1' as class_id from report_back
+     where user_account = #{userAccount} and auth_flag = 1
+     UNION ALL
+      select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+     '2' as class_id from report_front
+     where user_account = #{userAccount} and auth_flag = 1
+     UNION ALL
+    select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+     '3' as class_id from report_data
+     where user_account = #{userAccount} and auth_flag = 1
+     UNION ALL
+    select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+     '4' as class_id from report_talk
+     where user_account = #{userAccount} and auth_flag = 1) rt ORDER BY create_time DESC limit #{start},#{pageSize}
+  </select>
+
+  <sql id="baseQuery">
+    <where>
+      <if test="userAccount != null and userAccount != ''">
+        and user_account = #{userAccount}
+      </if>
+      <if test="portState != null and portState != ''">
+        and port_state = #{portState}
+      </if>
+      <if test="isEssence != null">
+        and is_essence = 1
+      </if>
+      <if test="isTop != null">
+        and is_top = 1
+      </if>
+      <if test="portIsauth != 0">
+        and auth_flag = 1
+      </if>
+      <if test="name != null and name != ''">
+        and port_title like concat("%",#{name},"%")
+      </if>
+    </where>
+  </sql>
+
+  <sql id="baseOrder">
+    <if test="orderType != null and orderType != ''">
+        ORDER BY ${orderType} DESC
+    </if>
+  </sql>
+</mapper>

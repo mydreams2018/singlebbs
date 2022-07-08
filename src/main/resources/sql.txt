@@ -1,0 +1,19 @@
+# SET GLOBAL log_bin_trust_function_creators = 1;
+
+# delimiter $$
+# drop function if exists get_child_list$$
+# create function get_child_list(in_id varchar(10)) returns varchar(1000)
+# begin
+#  declare ids varchar(1000) default '';
+#  declare tempids varchar(1000);
+#
+#  set tempids = in_id;
+#  while tempids is not null do
+#   set ids = CONCAT_WS(',',ids,tempids);
+#   select GROUP_CONCAT(id) into tempids from details_text_back where FIND_IN_SET(reply_parent,tempids)>0;
+#  end while;
+#  return ids;
+# end
+# $$
+# delimiter ;
+

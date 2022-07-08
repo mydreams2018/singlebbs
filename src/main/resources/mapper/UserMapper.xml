@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.User">
+    <id column="id" property="id" />
+    <result column="account" property="account" />
+    <result column="password" property="password" />
+    <result column="alias" property="alias" />
+    <result column="phone" property="phone" />
+    <result column="img" property="img" />
+    <result column="state" property="state" />
+    <result column="email" property="email" />
+    <result column="description" property="description" />
+    <result column="register_time"  property="registerTime" />
+    <result column="vip_level"  property="vipLevel" />
+    <result column="origin_from"  property="originFrom" />
+    <result column="register_year"  property="registerYear" />
+    <result column="accumulate_points"  property="accumulatePoints" />
+    <result column="is_manager"  property="isManager" />
+    <result column="from_city"  property="fromCity" />
+    <result column="authenticate"  property="authenticate" />
+  </resultMap>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.User" useGeneratedKeys="true">
+    insert into user (account, password, alias, img, state, register_time, vip_level,register_year,accumulate_points,is_manager,origin_from,description)
+    values (#{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, 
+      #{img,jdbcType=VARCHAR}, 1,
+      #{registerTime}, 0,
+            #{registerYear}, 0, 0, #{originFrom},#{description})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.User">
+    update user
+    set from_city = #{fromCity,jdbcType=VARCHAR},
+    <if test="email != null and email != ''">
+      email = #{email,jdbcType=VARCHAR},
+    </if>
+      description = #{description,jdbcType=VARCHAR}
+    where account = #{account}
+  </update>
+
+    <update id="updateImg">
+      update user
+      set
+        img = #{path}
+      where account = #{account}
+    </update>
+
+  <update id="updateAccumulatePoints">
+    update user
+    set accumulate_points = #{current},
+        vip_level = #{vipLevel}
+    where account = #{account} and accumulate_points =  #{original}
+  </update>
+
+  <update id="repass">
+      update user
+      set password = #{repass}
+      where account = #{account}
+  </update>
+
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select id, account, password, alias, img, state, email, description, register_time, vip_level,
+    origin_from, register_year, accumulate_points, is_manager, from_city, authenticate
+    from user
+    where account = #{0}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, account, password, alias, phone, img, state, email, description, register_time, vip_level,
+    origin_from, register_year, accumulate_points, is_manager, from_city, authenticate
+    from user
+    <include refid="baseQuery"/>
+    ORDER BY register_time DESC
+    limit #{start},#{pageSize}
+  </select>
+
+    <select id="selectByAccounts" resultMap="BaseResultMap">
+      select id, account, password, alias, phone, img, state, email, description, register_time, vip_level,
+      origin_from, register_year, accumulate_points, is_manager, from_city, authenticate
+      from user
+      where account IN
+      <foreach collection="acts"  item="as" separator="," close=")"  open="(">
+          #{as}
+      </foreach>
+    </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+     select count(id) from user
+     <include refid="baseQuery"/>
+  </select>
+
+    <select id="selectByunique" resultMap="BaseResultMap">
+    select id, account, password, alias, img, state, email, description, register_time, vip_level,
+      origin_from, register_year, accumulate_points, is_manager, from_city, authenticate
+    from user
+     where account = #{account} or alias = #{alias}
+    </select>
+
+    <sql id="baseQuery">
+    <where>
+      <if test="category != null and category !='' ">
+        and origin_from = #{category}
+      </if>
+      <if test="alias != null and alias !='' ">
+        and alias like concat("%",#{alias},"%")
+      </if>
+      <if test="startTime != null and startTime !='' ">
+        and register_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null and endTime !='' ">
+        and register_time &lt;=  #{endTime}
+      </if>
+    </where>
+  </sql>
+</mapper>
