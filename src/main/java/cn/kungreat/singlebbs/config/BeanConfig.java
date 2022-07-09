@@ -1,11 +1,15 @@
 package cn.kungreat.singlebbs.config;
 
 import cn.kungreat.singlebbs.filter.AnotherImageFilter;
+import cn.kungreat.singlebbs.security.MyUserDetails;
+import cn.kungreat.singlebbs.service.PermissionService;
+import cn.kungreat.singlebbs.service.UserService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -17,10 +21,13 @@ import javax.sql.DataSource;
 public class BeanConfig {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
+    @Bean
+    public UserDetailsService userDetailsService(UserService userService, PermissionService permissionService) {
+        return new MyUserDetails(userService,permissionService);
+    }
     @Bean
     public FilterRegistrationBean EKPSSOClientAuthentication() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -45,12 +52,7 @@ public class BeanConfig {
 //    }
     @Bean
     public ClientRegistrationRepository MyClientRegistrationRepository(){
-        return new ClientRegistrationRepository(){
-            @Override
-            public ClientRegistration findByRegistrationId(String registrationId) {
-                return MyClientRegistrations.valueOf(registrationId.toUpperCase()).getClientRegistration();
-            }
-        };
+        return registrationId -> MyClientRegistrations.valueOf(registrationId.toUpperCase()).getClientRegistration();
     }
 
     @Bean

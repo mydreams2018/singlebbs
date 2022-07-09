@@ -3,22 +3,23 @@ package cn.kungreat.singlebbs.security;
 import cn.kungreat.singlebbs.domain.User;
 import cn.kungreat.singlebbs.service.PermissionService;
 import cn.kungreat.singlebbs.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
+
 public class MyUserDetails implements UserDetailsService {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PermissionService permissionService;
+    private final UserService userService;
+    private final PermissionService permissionService;
+    public MyUserDetails(UserService userService, PermissionService permissionService) {
+        this.userService = userService;
+        this.permissionService = permissionService;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.selectByPrimaryKey(username);

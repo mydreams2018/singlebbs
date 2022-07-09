@@ -1,17 +1,20 @@
 package cn.kungreat.singlebbs.config;
 
+
 import cn.kungreat.singlebbs.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.*;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -22,15 +25,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+public class SecurityConfiguration {
     @Autowired
-    private MyUserDetails myUserDetails;
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserDetailsService userDetailsService;
     @Autowired
     private SuccessHandler successHandler;
     @Autowired
@@ -43,23 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private DefaultOAuth2AuthorizationRequestResolver defaultOAuth2AuthorizationRequestResolver;
     @Autowired
     private MyOAuth2UserService myOAuth2UserService;
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(myUserDetails).passwordEncoder(passwordEncoder);
-    }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // 接口层要获取认证对象的时候  不要在这里放行 这里 不会封装认证对象过来
-        web.ignoring().antMatchers(
-                "/image","/register","/userImg/**"
-                ,"/report/queryReport","/report/selectByPrimaryKey","/detailsText/queryDetails"
-        ,"/user/home","/user/lastSendPort","/user/lastReplyPort","/userReplyPort/selectAll","/user/resetPassword"
-        ,"/actuator/**");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 // by default uses a Bean by the name of corsConfigurationSource
                 // if Spring MVC is on classpath and no CorsConfigurationSource is provided,
@@ -84,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ).successHandler(new MyOauth2SuccessHandler()).failureHandler(new MyOauth2FailHandler())
                 )
                 .addFilterBefore(new ImageFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new TokenManagerFilter(myUserDetails), SessionManagementFilter.class)
+                .addFilterAfter(new TokenManagerFilter(userDetailsService), SessionManagementFilter.class)
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
                 .formLogin().loginPage("/index").loginProcessingUrl("/defaultLogin").permitAll()
@@ -92,18 +78,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(faliureHandler)
                 .and()
                 .logout().logoutUrl("/clearAll").clearAuthentication(true)
-                .invalidateHttpSession(true).deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true).deleteCookies("JSESSIONID","jwtToken","remember-me")
                 .logoutSuccessHandler(new LogoutHandler())
                 .and()
                 .rememberMe().tokenRepository(tokenRepository)
                 .tokenValiditySeconds(60 * 10080)
-                .userDetailsService(myUserDetails).authenticationSuccessHandler(new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                String path = request.getRequestURI().substring(4);
-                request.getRequestDispatcher(path).forward(request,response);
-            }
-        });
+                .userDetailsService(userDetailsService).authenticationSuccessHandler(new AuthenticationSuccessHandler() {
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        String path = request.getRequestURI().substring(request.getContextPath().length());
+                        request.getRequestDispatcher(path).forward(request, response);
+                    }
+                });
+        return http.build();
+    }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers(
+                "/image", "/register", "/userImg/**"
+                , "/report/queryReport", "/report/selectByPrimaryKey", "/detailsText/queryDetails"
+                , "/user/home", "/user/lastSendPort", "/user/lastReplyPort", "/userReplyPort/selectAll", "/user/resetPassword");
     }
 }

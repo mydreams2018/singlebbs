@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,9 +23,9 @@ import java.util.Map;
 public class TokenManagerFilter extends OncePerRequestFilter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TokenManagerFilter.class);
-    private final MyUserDetails myUserDetails;
+    private final UserDetailsService myUserDetails;
 
-    public TokenManagerFilter(MyUserDetails myUserDetails) {
+    public TokenManagerFilter(UserDetailsService myUserDetails) {
         this.myUserDetails = myUserDetails;
     }
 
