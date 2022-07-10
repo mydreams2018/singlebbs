@@ -1,19 +1,294 @@
-# SET GLOBAL log_bin_trust_function_creators = 1;
+ SET GLOBAL log_bin_trust_function_creators = 1;
+执行以下脚本 start
+ delimiter $$
+ drop function if exists get_child_list$$
+ create function get_child_list(in_id varchar(10)) returns varchar(1000)
+ begin
+  declare ids varchar(1000) default '';
+  declare tempids varchar(1000);
 
-# delimiter $$
-# drop function if exists get_child_list$$
-# create function get_child_list(in_id varchar(10)) returns varchar(1000)
-# begin
-#  declare ids varchar(1000) default '';
-#  declare tempids varchar(1000);
-#
-#  set tempids = in_id;
-#  while tempids is not null do
-#   set ids = CONCAT_WS(',',ids,tempids);
-#   select GROUP_CONCAT(id) into tempids from details_text_back where FIND_IN_SET(reply_parent,tempids)>0;
-#  end while;
-#  return ids;
-# end
-# $$
-# delimiter ;
+ set tempids = in_id;
+  while tempids is not null do
+   set ids = CONCAT_WS(',',ids,tempids);
+   select GROUP_CONCAT(id) into tempids from details_text_back where FIND_IN_SET(reply_parent,tempids)>0;
+  end while;
+  return ids;
+ end
+ $$
+ delimiter ;
+执行以下脚本 end
+create table if not exists details_text_back
+(
+    id           bigint auto_increment
+        primary key,
+    details_text text                 null,
+    is_adoption  bit                  null,
+    like_number  int                  null,
+    port_id      bigint               null,
+    user_account varchar(66)          null,
+    create_data  date                 null,
+    auth_flag    bit                  null,
+    is_port      bit                  null,
+    like_account text charset utf8mb4 null,
+    reply_parent bigint               null comment '上级ID'
+);
 
+create index account_port
+    on details_text_back (user_account);
+
+create table details_text_data
+(
+    id           bigint auto_increment
+        primary key,
+    details_text text        null,
+    is_adoption  bit         null,
+    like_number  int         null,
+    port_id      bigint      null,
+    user_account varchar(66) null,
+    create_data  date        null,
+    auth_flag    bit         null,
+    is_port      bit         null,
+    like_account text        null
+);
+
+create index account_port
+    on details_text_data (user_account);
+
+create table details_text_front
+(
+    id           bigint auto_increment
+        primary key,
+    details_text text        null,
+    is_adoption  bit         null,
+    like_number  int         null,
+    port_id      bigint      null,
+    user_account varchar(66) null,
+    create_data  date        null,
+    auth_flag    bit         null,
+    is_port      bit         null,
+    like_account text        null
+);
+
+create index account_port
+    on details_text_front (user_account);
+
+create table details_text_talk
+(
+    id           bigint auto_increment
+        primary key,
+    details_text text        null,
+    is_adoption  bit         null,
+    like_number  int         null,
+    port_id      bigint      null,
+    user_account varchar(66) null,
+    create_data  date        null,
+    auth_flag    bit         null,
+    is_port      bit         null,
+    like_account text        null
+);
+
+create index account_port
+    on details_text_talk (user_account);
+
+create table oauth2_user
+(
+    open_id       varchar(255) not null comment 'oauth2-唯一用户标识'
+        primary key,
+    user_account  varchar(66)  null,
+    provider_id   varchar(66)  null,
+    access_token  varchar(255) null,
+    refresh_token varchar(255) null,
+    expire_time   bigint       null,
+    register_time date         null
+);
+
+create table permission
+(
+    permission_methods varchar(255) collate utf8mb4_bin null,
+    descript           varchar(126)                     null
+)
+    collate = utf8_bin;
+
+create table permission_mapping
+(
+    id       bigint auto_increment
+        primary key,
+    account  varchar(126) collate utf8mb4_bin null,
+    descript varchar(255) collate utf8mb4_bin null
+)
+    collate = utf8_bin;
+
+create table persistent_logins
+(
+    username  varchar(64) collate utf8mb4_bin not null,
+    series    varchar(64) collate utf8mb4_bin not null
+        primary key,
+    token     varchar(64) collate utf8mb4_bin not null,
+    last_used timestamp                       not null
+)
+    collate = utf8_bin;
+
+create table report_back
+(
+    id           bigint auto_increment
+        primary key,
+    port_title   varchar(128) null,
+    dataType     varchar(66)  null,
+    dataVersion  varchar(6)   null,
+    useides      varchar(66)  null,
+    experience   tinyint      null,
+    user_account varchar(66)  null,
+    is_essence   bit          null,
+    port_state   varchar(6)   null,
+    is_top       bit          null,
+    reply_number tinyint      null,
+    look_number  tinyint      null,
+    create_time  date         null,
+    auth_flag    bit          null
+);
+
+create index account_port
+    on report_back (user_account);
+
+create table report_data
+(
+    id           bigint auto_increment
+        primary key,
+    port_title   varchar(128) null,
+    dataType     varchar(66)  null,
+    dataVersion  varchar(6)   null,
+    useides      varchar(66)  null,
+    experience   tinyint      null,
+    user_account varchar(66)  null,
+    is_essence   bit          null,
+    port_state   varchar(6)   null,
+    is_top       bit          null,
+    reply_number tinyint      null,
+    look_number  tinyint      null,
+    create_time  date         null,
+    auth_flag    bit          null
+);
+
+create index account_port
+    on report_data (user_account);
+
+create table report_front
+(
+    id           bigint auto_increment
+        primary key,
+    port_title   varchar(128) null,
+    dataType     varchar(66)  null,
+    dataVersion  varchar(6)   null,
+    useides      varchar(66)  null,
+    experience   tinyint      null,
+    user_account varchar(66)  null,
+    is_essence   bit          null,
+    port_state   varchar(6)   null,
+    is_top       bit          null,
+    reply_number tinyint      null,
+    look_number  tinyint      null,
+    create_time  date         null,
+    auth_flag    bit          null
+);
+
+create index account_port
+    on report_front (user_account);
+
+create table report_talk
+(
+    id           bigint auto_increment
+        primary key,
+    port_title   varchar(128) null,
+    dataType     varchar(66)  null,
+    dataVersion  varchar(6)   null,
+    useides      varchar(66)  null,
+    experience   tinyint      null,
+    user_account varchar(66)  null,
+    is_essence   bit          null,
+    port_state   varchar(6)   null,
+    is_top       bit          null,
+    reply_number tinyint      null,
+    look_number  tinyint      null,
+    create_time  date         null,
+    auth_flag    bit          null
+);
+
+create index account_port
+    on report_talk (user_account);
+
+create table user
+(
+    id                bigint auto_increment
+        primary key,
+    account           varchar(12) collate utf8mb4_bin  not null comment '用户',
+    password          varchar(60) collate utf8mb4_bin  null,
+    alias             varchar(6) collate utf8mb4_bin   not null comment '别名',
+    phone             bigint                           null comment '电话',
+    img               varchar(188) collate utf8mb4_bin null comment '图片',
+    state             tinyint                          null,
+    email             varchar(136) collate utf8mb4_bin null,
+    description       varchar(255) collate utf8mb4_bin null,
+    register_time     datetime                         null,
+    vip_level         tinyint                          null,
+    origin_from       varchar(66) collate utf8mb4_bin  null,
+    register_year     smallint                         null,
+    accumulate_points int                              null comment '飞吻',
+    is_manager        bit                              null,
+    from_city         varchar(16) collate utf8mb4_bin  null,
+    authenticate      varchar(255) collate utf8mb4_bin null,
+    constraint alias
+        unique (alias),
+    constraint uni
+        unique (account)
+)
+    collate = utf8_bin;
+
+create table user_collect
+(
+    id           bigint auto_increment
+        primary key,
+    user_account varchar(255) null,
+    class_id     int          null,
+    port_id      bigint       null,
+    collect_time date         null,
+    port_title   varchar(255) null
+);
+
+create table user_message
+(
+    id            bigint unsigned auto_increment
+        primary key,
+    class_id      int          null,
+    port_id       bigint       null,
+    details_id    bigint       null,
+    src_alias     varchar(255) null,
+    receive_alias varchar(255) null,
+    receive_date  date         null,
+    auth_flag     bit          null
+);
+
+create table user_reply_port
+(
+    id           bigint unsigned auto_increment
+        primary key,
+    user_account varchar(255) null,
+    reply_year   int          null,
+    reply_week   int          null,
+    reply_number int          null
+);
+
+create index userAccount
+    on user_reply_port (user_account);
+
+create table user_sign
+(
+    id              bigint unsigned auto_increment comment '主键'
+        primary key,
+    user_account    varchar(18) null,
+    last_sign_time  date        null,
+    accumulate_sign int         null
+);
+
+create index userAccount
+    on user_sign (user_account)
+    comment '用户索引';
