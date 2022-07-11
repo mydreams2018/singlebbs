@@ -29,8 +29,8 @@ public class MyUserDetails implements UserDetailsService {
         Set<GrantedAuthority> roles = new LinkedHashSet<>();
         List<String> ps = permissionService.selectPermissions(username);
         if(ps != null && ps.size()>0){
-            for(int x=0;x< ps.size();x++){
-                roles.add(new SimpleGrantedAuthority("ROLE_"+ps.get(x)));
+            for (String p : ps) {
+                roles.add(new SimpleGrantedAuthority("ROLE_" + p));
             }
         }
         return new LoginUser(user,roles);
