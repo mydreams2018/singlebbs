@@ -20,4 +20,6 @@ mybatis-generator插件一键生成基本CURD代码
 
 1. 下载此项目源代码.
 2. 修改application.properties 配置文件 最少修改user.imgPath图片保存地址为你本地的一个目录
-3. 使用maven打成jar包运行/开发工具打开项目主方法运行
+3. 创建数据库flybbs 
+4. 运行sql脚本、sql.txt
+5. 使用maven打成jar包运行/开发工具打开项目主方法运行
