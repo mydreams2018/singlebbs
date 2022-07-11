@@ -89,7 +89,7 @@
   <select id="selectChildAnswer" resultMap="BaseResultMap">
     select * from (select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
     details_text, is_port,reply_parent
-    from ${tableName} where find_in_set(id,get_child_list(#{replyIds})) and is_port!=1
+    from ${tableName} where find_in_set(id,get_child_list(#{replyIds},#{tableName})) and is_port!=1
         <if test="portIsauth != 0">
           and auth_flag = 1
         </if>
