@@ -42,23 +42,13 @@ public class BaseController {
         int randomMid = RandomUtils.nextInt(1,10);
         int randomend = RandomUtils.nextInt(1,10);
         int syb1 = RandomUtils.nextInt(1,5);
-        String rt;
-        switch (syb1){
-            case 1:
-                rt = randomStr+"+"+randomMid+"*"+randomend;
-                break;
-            case 2:
-                rt = randomStr+"+"+randomMid+"-"+randomend;
-                break;
-            case 3:
-                rt = randomStr+"*"+randomMid+"-"+randomend;
-                break;
-            case 4:
-                rt = randomStr+"-"+randomMid+"*"+randomend;
-                break;
-            default:
-                rt = randomStr+"*"+randomMid+"+"+randomend;
-        }
+        String rt = switch (syb1) {
+            case 1 -> randomStr + "+" + randomMid + "*" + randomend;
+            case 2 -> randomStr + "+" + randomMid + "-" + randomend;
+            case 3 -> randomStr + "*" + randomMid + "-" + randomend;
+            case 4 -> randomStr + "-" + randomMid + "*" + randomend;
+            default -> randomStr + "*" + randomMid + "+" + randomend;
+        };
         request.getSession().setAttribute("image_code", rt);
         request.getSession().setAttribute("time", System.currentTimeMillis());
         return rt;

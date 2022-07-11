@@ -21,18 +21,11 @@ public class DetailsTextQuery extends Paging{
     private String detailsText;
     public String getTableName(){
         if(classId != null){
-            switch (classId){
-                case 1:
-                    tableName= "details_text_back";
-                    break;
-                case 2:
-                    tableName= "details_text_front";
-                    break;
-                case 3:
-                    tableName= "details_text_data";
-                    break;
-                case 4:
-                    tableName= "details_text_talk";
+            switch (classId) {
+                case 1 -> tableName = "details_text_back";
+                case 2 -> tableName = "details_text_front";
+                case 3 -> tableName = "details_text_data";
+                case 4 -> tableName = "details_text_talk";
             }
         }
         return tableName;
