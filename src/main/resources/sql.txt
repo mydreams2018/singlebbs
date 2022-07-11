@@ -1,21 +1,31 @@
  SET GLOBAL log_bin_trust_function_creators = 1;
 执行以下脚本 start
- delimiter $$
- drop function if exists get_child_list$$
- create function get_child_list(in_id varchar(10)) returns varchar(1000)
- begin
-  declare ids varchar(1000) default '';
-  declare tempids varchar(1000);
+delimiter $$
+drop function if exists get_child_list$$
+create function get_child_list(in_id varchar(10),in_table varchar(25)) returns varchar(1000)
+begin
+ declare ids varchar(1000) default '';
+ declare tempids varchar(1000);
 
  set tempids = in_id;
-  while tempids is not null do
-   set ids = CONCAT_WS(',',ids,tempids);
-   select GROUP_CONCAT(id) into tempids from details_text_back where FIND_IN_SET(reply_parent,tempids)>0;
-  end while;
-  return ids;
- end
- $$
- delimiter ;
+ while tempids is not null do
+  set ids = CONCAT_WS(',',ids,tempids);
+
+    IF in_table='details_text_back' THEN
+        select GROUP_CONCAT(id) into tempids from details_text_back where FIND_IN_SET(reply_parent,tempids)>0;
+    ELSEIF in_table='details_text_front' THEN
+        select GROUP_CONCAT(id) into tempids from details_text_front where FIND_IN_SET(reply_parent,tempids)>0;
+    ELSEIF in_table='details_text_data' THEN
+        select GROUP_CONCAT(id) into tempids from details_text_data where FIND_IN_SET(reply_parent,tempids)>0;
+    ELSEIF in_table='details_text_talk' THEN
+      select GROUP_CONCAT(id) into tempids from details_text_talk where FIND_IN_SET(reply_parent,tempids)>0;
+    ELSE return '';
+    END IF;
+ end while;
+ return ids;
+end
+$$
+delimiter ;
 执行以下脚本 end
 create table if not exists details_text_back
 (
@@ -48,7 +58,8 @@ create table details_text_data
     create_data  date        null,
     auth_flag    bit         null,
     is_port      bit         null,
-    like_account text        null
+    like_account text        null,
+    reply_parent bigint      null comment '上级ID'
 );
 
 create index account_port
@@ -66,7 +77,8 @@ create table details_text_front
     create_data  date        null,
     auth_flag    bit         null,
     is_port      bit         null,
-    like_account text        null
+    like_account text        null,
+    reply_parent bigint      null comment '上级ID'
 );
 
 create index account_port
@@ -84,7 +96,8 @@ create table details_text_talk
     create_data  date        null,
     auth_flag    bit         null,
     is_port      bit         null,
-    like_account text        null
+    like_account text        null,
+    reply_parent bigint      null comment '上级ID'
 );
 
 create index account_port
