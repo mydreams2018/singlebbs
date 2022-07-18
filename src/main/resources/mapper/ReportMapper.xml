@@ -91,12 +91,17 @@
   <select id="mySelectCount" resultType="java.lang.Integer">
   select sum(rt.num) from (
     select count(id) as num from report_back where user_account = #{userAccount} and auth_flag = 1
+                                                <include refid="myPortQuery" />
     UNION ALL
     select count(id) as num from report_front where user_account = #{userAccount} and auth_flag = 1
+                                                <include refid="myPortQuery" />
     UNION ALL
     select count(id) as num from report_data where user_account = #{userAccount} and auth_flag = 1
+                                                <include refid="myPortQuery" />
     UNION ALL
-    select count(id) as num from report_talk where user_account = #{userAccount} and auth_flag = 1) rt
+    select count(id) as num from report_talk where user_account = #{userAccount} and auth_flag = 1
+                                                <include refid="myPortQuery" />
+                                             ) rt
   </select>
 
   <select id="mySelectAll" resultMap="BaseResultMap">
@@ -104,19 +109,20 @@
      from (
      select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
      '1' as class_id from report_back
-     where user_account = #{userAccount} and auth_flag = 1
+     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
      UNION ALL
       select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
      '2' as class_id from report_front
-     where user_account = #{userAccount} and auth_flag = 1
+     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
      UNION ALL
     select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
      '3' as class_id from report_data
-     where user_account = #{userAccount} and auth_flag = 1
+     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
      UNION ALL
     select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
      '4' as class_id from report_talk
-     where user_account = #{userAccount} and auth_flag = 1) rt ORDER BY create_time DESC limit #{start},#{pageSize}
+     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
+     ) rt ORDER BY create_time DESC limit #{start},#{pageSize}
   </select>
 
   <sql id="baseQuery">
@@ -147,4 +153,17 @@
         ORDER BY ${orderType} DESC
     </if>
   </sql>
+
+  <sql id="myPortQuery">
+    <if test="name != null and name != ''">
+      and port_title like concat("%",#{name},"%")
+    </if>
+    <if test="beginTime != null and beginTime !='' ">
+      and create_time &gt;= #{beginTime}
+    </if>
+    <if test="endTime != null and endTime !='' ">
+      and create_time &lt;=  #{endTime}
+    </if>
+  </sql>
+
 </mapper>
