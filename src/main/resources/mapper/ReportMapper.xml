@@ -22,7 +22,8 @@
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from ${tableName}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id}
+    and user_account=#{account}
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.Report" useGeneratedKeys="true">
     insert into ${tableName} (port_title,

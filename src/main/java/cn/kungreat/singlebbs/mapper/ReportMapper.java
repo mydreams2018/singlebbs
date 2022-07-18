@@ -2,11 +2,13 @@ package cn.kungreat.singlebbs.mapper;
 
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.ReportQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface ReportMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(@Param("id") String id,@Param("account")String account
+            ,@Param("tableName")String tableName);
 
     int insert(Report record);
 

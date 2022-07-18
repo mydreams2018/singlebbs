@@ -6,6 +6,7 @@ import cn.kungreat.singlebbs.domain.User;
 import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ReportMapper;
 import cn.kungreat.singlebbs.query.ReportQuery;
+import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.ReportService;
 import cn.kungreat.singlebbs.service.UserService;
 import cn.kungreat.singlebbs.vo.QueryResult;
@@ -17,10 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class ReportServiceImpl implements ReportService {
     @Autowired
@@ -32,8 +31,15 @@ public class ReportServiceImpl implements ReportService {
     @Value("${portIsauth}")
     private Integer portIsauth;
     @Override
-    public int deleteByPrimaryKey(Long id) {
-        return 0;
+    public int deleteByPrimaryKeys(UserQuery userQuery) {
+        Assert.isTrue(StringUtils.isNotEmpty(userQuery.getIds()),"删除数据ID不能为空");
+        userQuery.setAccount(SecurityContextHolder.getContext().getAuthentication().getName());
+        String[] split = userQuery.getIds().split(",");
+        for (int i = 0; i < split.length; i++) {
+            reportMapper.deleteByPrimaryKey(split[i].split("-")[0]
+                    ,userQuery.getAccount(),split[i].split("-")[1]);
+        }
+        return split.length;
     }
 
     @Transactional
