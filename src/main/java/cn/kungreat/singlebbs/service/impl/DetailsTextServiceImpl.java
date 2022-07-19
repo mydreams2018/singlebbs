@@ -3,7 +3,6 @@ package cn.kungreat.singlebbs.service.impl;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.domain.User;
-import cn.kungreat.singlebbs.domain.UserMessage;
 import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ReportMapper;
 import cn.kungreat.singlebbs.mapper.UserMapper;
@@ -121,6 +120,10 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         query.setLikeAccount(s.getLikeAccount()+","+loginUser.getAlias());
         query.setLikeNumber(s.getLikeNumber());
         detailsTextMapper.updateLikeAccount(query);
+        Report report = new Report();
+        report.setId(query.getPortId());
+        report.setClassId(query.getClassId());
+        reportMapper.incrementLikeNumber(report);
     }
 //自已删除自已的回贴
     @Transactional

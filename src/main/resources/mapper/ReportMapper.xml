@@ -45,6 +45,9 @@
     <update id="incrementNumber">
       update ${tableName} set reply_number = reply_number + 1 where id = #{id,jdbcType=BIGINT}
     </update>
+  <update id="incrementLikeNumber">
+    update ${tableName} set look_number = look_number + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
     <update id="decrementNumber">
       update ${tableName} set reply_number = reply_number - 1 where id = #{id,jdbcType=BIGINT}
     </update>

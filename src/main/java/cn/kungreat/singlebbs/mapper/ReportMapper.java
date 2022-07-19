@@ -19,6 +19,7 @@ public interface ReportMapper {
     List<Report> selectAll(ReportQuery query);
 
     void incrementNumber(Report port);
+    void incrementLikeNumber(Report port);
     void decrementNumber(Report port);
 
     int updateBystate(Report record);
