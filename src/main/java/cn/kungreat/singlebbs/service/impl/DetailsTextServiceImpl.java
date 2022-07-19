@@ -116,9 +116,9 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         Assert.isTrue(query.getId()!=null,"ID异常");
         DetailsText s = detailsTextMapper.selectLikeAccount(query);
         Assert.isTrue(s!=null,"贴子异常");
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(s.getLikeAccount()==null||!s.getLikeAccount().contains(name),"已经点过赞了");
-        query.setLikeAccount(s.getLikeAccount()+","+name);
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Assert.isTrue(s.getLikeAccount()==null||!s.getLikeAccount().contains(loginUser.getAlias()),"已经点过赞了");
+        query.setLikeAccount(s.getLikeAccount()+","+loginUser.getAlias());
         query.setLikeNumber(s.getLikeNumber());
         detailsTextMapper.updateLikeAccount(query);
     }

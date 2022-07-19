@@ -71,7 +71,7 @@
 
   <select id="selectByPort" parameterType="cn.kungreat.singlebbs.domain.DetailsText" resultMap="BaseResultMap">
     select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
-    details_text, is_port
+    details_text, is_port,like_account
     from  ${tableName}  where port_id = #{portId} and is_port=1 and auth_flag = #{portIsauth}
   </select>
 
