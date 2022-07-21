@@ -64,7 +64,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
-
+<!--  要显示sql日志 请用debug模式  -->
     <logger name="cn.kungreat.singlebbs" level="info" additivity="false">
         <appender-ref ref="file_error" />
         <appender-ref ref="file_info" />
