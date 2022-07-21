@@ -4,7 +4,9 @@ import cn.kungreat.singlebbs.domain.UserCollect;
 import cn.kungreat.singlebbs.mapper.UserCollectMapper;
 import cn.kungreat.singlebbs.query.UserCollectQuery;
 import cn.kungreat.singlebbs.service.UserCollectService;
+import cn.kungreat.singlebbs.vo.JsonResult;
 import cn.kungreat.singlebbs.vo.QueryResult;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -58,5 +60,12 @@ public class UserCollectServiceImpl implements UserCollectService {
         result.setDatas(list);
         result.setPage(query);
         return result;
+    }
+
+    @Override
+    public int deleteReports(UserCollectQuery query) {
+        Assert.isTrue(StringUtils.isNotBlank(query.getIds()),"删除数据ID不能为空");
+        query.setUserAccount(SecurityContextHolder.getContext().getAuthentication().getName());
+        return userCollectMapper.deleteReports(query);
     }
 }

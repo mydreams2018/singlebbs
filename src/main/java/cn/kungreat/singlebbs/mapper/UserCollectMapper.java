@@ -16,4 +16,6 @@ public interface UserCollectMapper {
     List<UserCollect> selectAll(UserCollectQuery query);
 
     Integer selectCount(UserCollectQuery query);
+
+    int deleteReports(UserCollectQuery query);
 }

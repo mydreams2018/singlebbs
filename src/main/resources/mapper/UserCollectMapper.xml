@@ -13,6 +13,10 @@
     delete from user_collect
     where id = #{id} and user_account = #{account}
   </delete>
+  <delete id="deleteReports">
+    delete from user_collect
+    where id in (${ids}) and user_account = #{userAccount}
+  </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.UserCollect" useGeneratedKeys="true">
     insert into user_collect (user_account, class_id, port_id, 
       collect_time,port_title)
@@ -28,10 +32,23 @@
 
   <select id="selectAll" resultMap="BaseResultMap">
     select id, user_account, class_id, port_id, collect_time, port_title
-    from user_collect where user_account=#{userAccount} limit #{start},#{pageSize}
+    from user_collect where user_account=#{userAccount} <include refid="collectionQuery" /> limit #{start},#{pageSize}
   </select>
 
     <select id="selectCount" resultType="java.lang.Integer">
         select count(id)  from user_collect where user_account=#{userAccount}
+        <include refid="collectionQuery" />
     </select>
+
+  <sql id="collectionQuery">
+    <if test="name != null and name !='' ">
+      and port_title like concat("%",#{name},"%")
+    </if>
+    <if test="beginTime != null and beginTime !='' ">
+      and collect_time &gt;= #{beginTime}
+    </if>
+    <if test="endTime != null and endTime !='' ">
+      and collect_time &lt;=  #{endTime}
+    </if>
+  </sql>
 </mapper>
