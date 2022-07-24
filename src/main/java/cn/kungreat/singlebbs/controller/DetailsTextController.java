@@ -2,6 +2,7 @@ package cn.kungreat.singlebbs.controller;
 
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
+import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.DetailsTextService;
 import cn.kungreat.singlebbs.vo.JsonResult;
 import cn.kungreat.singlebbs.vo.QueryResult;
@@ -90,4 +91,18 @@ public class DetailsTextController {
         }
         return jsonResult;
     }
+    @RequestMapping(value = "/deleteByIdsOnUser",method = RequestMethod.POST)
+    public JsonResult deleteByIdsOnUser(UserQuery record){
+        JsonResult jsonResult = new JsonResult();
+        try{
+            jsonResult.setMsg("删除数据成功条:"+detailsTextService.deleteByPrimaryKeys(record));
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setId("imgCode");
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
+    }
+
 }

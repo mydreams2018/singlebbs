@@ -60,6 +60,12 @@ public class ReportController {
         query.setUserAccount(SecurityContextHolder.getContext().getAuthentication().getName());
         return reportService.myQueryReport(query);
     }
+    @RequestMapping(value = "/myReplyPorts",method = RequestMethod.POST)
+    public QueryResult myReplyPorts(ReportQuery query){
+        query.setClassId(1);//没用的代码,防止报错
+        query.setUserAccount(SecurityContextHolder.getContext().getAuthentication().getName());
+        return reportService.myReplyPorts(query);
+    }
 
     @RequestMapping(value = "/selectByPrimaryKey",method = RequestMethod.POST)
     public Report selectByPrimaryKey(Report record){

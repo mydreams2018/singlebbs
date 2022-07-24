@@ -3,6 +3,7 @@
 <mapper namespace="cn.kungreat.singlebbs.mapper.DetailsTextMapper">
   <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.DetailsText">
     <id column="id" property="id" />
+    <result column="class_id" property="classId" />
     <result column="is_adoption" property="isAdoption" />
     <result column="like_number" property="likeNumber" />
     <result column="port_id" property="portId" />
@@ -22,6 +23,12 @@
   <delete id="deleteByPrimaryKey" parameterType="cn.kungreat.singlebbs.query.DetailsTextQuery">
     delete from ${tableName}
     where id = #{id}
+  </delete>
+
+  <delete id="deleteByPrimaryKeys">
+    delete from ${tableName}
+    where id = #{id}
+      and user_account=#{account}
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.DetailsText" useGeneratedKeys="true">
     insert into ${tableName} (like_number,is_adoption ,port_id,
@@ -121,6 +128,39 @@
         ) rt ORDER BY rt.create_data DESC limit 0,10
   </select>
 
+    <select id="myReplyPortsCount" resultType="java.lang.Integer">
+      select sum(rt.num) from (
+        select count(id) as num from details_text_back where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        <include refid="myReplyPortQuery" />
+        UNION ALL
+        select count(id) as num from details_text_front where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        <include refid="myReplyPortQuery" />
+        UNION ALL
+        select count(id) as num from details_text_data where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        <include refid="myReplyPortQuery" />
+        UNION ALL
+        select count(id) as num from details_text_talk where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        <include refid="myReplyPortQuery" />
+      ) rt
+    </select>
+
+  <select id="myReplyPortsAll" resultMap="BaseResultMap" >
+    select id, details_text, port_id,create_data, class_id
+    from (
+    select id, details_text, port_id,create_data, '1' as class_id from details_text_back
+    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    UNION ALL
+    select id,  details_text, port_id,create_data,'2' as class_id from details_text_front
+    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    UNION ALL
+    select id,  details_text,port_id,create_data, '3' as class_id from details_text_data
+    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    UNION ALL
+    select id, details_text, port_id,create_data,'4' as class_id from details_text_talk
+    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    ) rt ORDER BY create_data DESC limit #{start},#{pageSize}
+  </select>
+
   <sql id="baseQuery">
     where reply_parent is null
       <if test="portId != null">
@@ -134,6 +174,18 @@
   <sql id="baseOrder">
     <if test="orderType != null and orderType != ''">
       ORDER BY ${orderType} DESC
+    </if>
+  </sql>
+
+  <sql id="myReplyPortQuery">
+    <if test="name != null and name != ''">
+      and details_text like concat("%",#{name},"%")
+    </if>
+    <if test="beginTime != null and beginTime !='' ">
+      and create_data &gt;= #{beginTime}
+    </if>
+    <if test="endTime != null and endTime !='' ">
+      and create_data &lt;=  #{endTime}
     </if>
   </sql>
 </mapper>

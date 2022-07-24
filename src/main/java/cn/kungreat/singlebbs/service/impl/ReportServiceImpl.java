@@ -31,6 +31,7 @@ public class ReportServiceImpl implements ReportService {
     @Value("${portIsauth}")
     private Integer portIsauth;
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByPrimaryKeys(UserQuery userQuery) {
         Assert.isTrue(StringUtils.isNotEmpty(userQuery.getIds()),"删除数据ID不能为空");
         userQuery.setAccount(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -162,6 +163,20 @@ public class ReportServiceImpl implements ReportService {
         List list  = Collections.emptyList();
         if (count >  0){
             list = reportMapper.mySelectAll(query);
+        }
+        query.setData(count,query.getPageSize(),query.getCurrentPage());
+        QueryResult result = new QueryResult();
+        result.setDatas(list);
+        result.setPage(query);
+        return result;
+    }
+
+    @Override
+    public QueryResult myReplyPorts(ReportQuery query) {
+        Integer count = detailsTextMapper.myReplyPortsCount(query);
+        List<?> list  = Collections.emptyList();
+        if (count >  0){
+            list = detailsTextMapper.myReplyPortsAll(query);
         }
         query.setData(count,query.getPageSize(),query.getCurrentPage());
         QueryResult result = new QueryResult();

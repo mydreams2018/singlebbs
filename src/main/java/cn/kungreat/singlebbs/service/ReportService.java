@@ -22,4 +22,6 @@ public interface ReportService {
     List<Report> lastSendPort(Report query);
 
     QueryResult myQueryReport(ReportQuery query);
+
+    QueryResult myReplyPorts(ReportQuery query);
 }

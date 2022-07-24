@@ -8,6 +8,7 @@ import cn.kungreat.singlebbs.mapper.ReportMapper;
 import cn.kungreat.singlebbs.mapper.UserMapper;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.UserMessageQuery;
+import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.DetailsTextService;
 import cn.kungreat.singlebbs.service.ReportService;
@@ -208,5 +209,18 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         query.setUserAccount(user.getAccount());
         query.setPortIsauth(1);
         return detailsTextMapper.lastReplyPort(query);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteByPrimaryKeys(UserQuery userQuery) {
+        Assert.isTrue(StringUtils.isNotEmpty(userQuery.getIds()),"删除数据ID不能为空");
+        userQuery.setAccount(SecurityContextHolder.getContext().getAuthentication().getName());
+        String[] split = userQuery.getIds().split(",");
+        for (String s : split) {
+            detailsTextMapper.deleteByPrimaryKeys(s.split("-")[0]
+                    , userQuery.getAccount(), s.split("-")[1]);
+        }
+        return split.length;
     }
 }

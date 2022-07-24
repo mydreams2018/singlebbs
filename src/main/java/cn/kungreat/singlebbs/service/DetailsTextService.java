@@ -3,6 +3,7 @@ package cn.kungreat.singlebbs.service;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
+import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.vo.QueryResult;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface DetailsTextService {
     void updateByPrimaryKey(DetailsTextQuery query);
 
     List<Report> lastReplyPort(Report query);
+
+    Integer deleteByPrimaryKeys(UserQuery record);
 }
