@@ -2,7 +2,7 @@
 执行以下脚本======> start
 delimiter $$
 drop function if exists get_child_list$$
-create function get_child_list(in_id varchar(10),in_table varchar(25)) returns varchar(1000)
+create function get_child_list(in_id varchar(256),in_table varchar(64)) returns varchar(1000)
 begin
  declare ids varchar(1000) default '';
  declare tempids varchar(1000);
