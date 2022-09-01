@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2Authorization
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 @Configuration
@@ -29,8 +30,8 @@ public class BeanConfig {
         return new MyUserDetails(userService,permissionService);
     }
     @Bean
-    public FilterRegistrationBean EKPSSOClientAuthentication() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<Filter> EKPSSOClientAuthentication() {
+        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new AnotherImageFilter());
         registration.addUrlPatterns("/register","/user/resetPassword");
         registration.setName("anotherImageFilter");
@@ -45,11 +46,6 @@ public class BeanConfig {
         return listener;
     }*/
 
-//    @Bean
-//    @ConfigurationProperties(prefix = "cn.kungreat.social")
-//    public SocialProperties configBean(){
-//        return new SocialProperties();
-//    }
     @Bean
     public ClientRegistrationRepository MyClientRegistrationRepository(){
         return registrationId -> MyClientRegistrations.valueOf(registrationId.toUpperCase()).getClientRegistration();
