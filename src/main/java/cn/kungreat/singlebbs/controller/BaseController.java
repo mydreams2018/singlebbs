@@ -79,7 +79,9 @@ public class BaseController {
 //            Assert.isTrue(imgPath.getSize() < 1048576,"上传文件不能大于1M");
             Assert.isTrue("image/jpeg".equals(file.getContentType())
                     ||"image/gif".equals(file.getContentType())
-                    || "image/jpg".equals(file.getContentType()),"只支持jpg或gif格式的图片");
+                    || "image/jpg".equals(file.getContentType())
+                    || "image/png".equals(file.getContentType()),
+                    "只支持jpg或gif格式的图片");
             String type = file.getContentType().split("/")[1];
             String rans = RandomStringUtils.randomAlphabetic(8)+"."+type;
             String img = path +"userImg/"+rans;
