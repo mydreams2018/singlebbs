@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.CollaborationCompanyMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.CollaborationCompany">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="only_status" jdbcType="INTEGER" property="onlyStatus" />
+    <result column="company_images" jdbcType="VARCHAR" property="companyImages" />
+    <result column="describe" jdbcType="VARCHAR" property="describe" />
+    <result column="avtive_time" jdbcType="TIMESTAMP" property="avtiveTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="business_people" jdbcType="VARCHAR" property="businessPeople" />
+    <result column="link_url" jdbcType="VARCHAR" property="linkUrl" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from collaboration_company
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.CollaborationCompany" useGeneratedKeys="true">
+    insert into collaboration_company (only_status, company_images, describe, 
+      avtive_time, end_time, is_active, 
+      business_people,link_url)
+    values (#{onlyStatus,jdbcType=INTEGER}, #{companyImages,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
+      #{avtiveTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{isActive,jdbcType=BIT}, 
+      #{businessPeople,jdbcType=VARCHAR},#{linkUrl})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.CollaborationCompany">
+    update collaboration_company
+    set only_status = #{onlyStatus,jdbcType=INTEGER},
+      company_images = #{companyImages,jdbcType=VARCHAR},
+      describe = #{describe,jdbcType=VARCHAR},
+      avtive_time = #{avtiveTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      is_active = #{isActive,jdbcType=BIT},
+      business_people = #{businessPeople,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, only_status, company_images, describe, avtive_time, end_time, is_active, 
+    business_people, link_url
+    from collaboration_company
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, only_status, company_images, describe, avtive_time, end_time, is_active, 
+    business_people ,link_url
+    from collaboration_company
+  </select>
+
+</mapper>
