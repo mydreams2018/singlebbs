@@ -13,7 +13,8 @@
     <result column="link_url" jdbcType="VARCHAR" property="linkUrl" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from collaboration_company
+    update collaboration_company
+    set is_active = 0
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.CollaborationCompany" useGeneratedKeys="true">
@@ -42,10 +43,38 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectAll" parameterType="cn.kungreat.singlebbs.query.CollaborationCompanyQuery" resultMap="BaseResultMap">
     select id, only_status, company_images, describe, avtive_time, end_time, is_active, 
     business_people ,link_url
     from collaboration_company
+    <include refid="baseQuery"/>
+    ORDER BY end_time DESC
+    limit #{start},#{pageSize}
   </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(id) from collaboration_company
+    <include refid="baseQuery"/>
+  </select>
+
+  <sql id="baseQuery">
+    <where>
+      <if test="onlyStatus != null">
+        and only_status = #{onlyStatus}
+      </if>
+      <if test="isActive != null">
+        and is_active = #{isActive}
+      </if>
+      <if test="businessPeople != null and businessPeople !='' ">
+        and business_people like concat("%",#{businessPeople},"%")
+      </if>
+      <if test="beginTime != null and beginTime !='' ">
+        and end_time &gt;= #{endTime}
+      </if>
+      <if test="endTime != null and endTime !='' ">
+        and end_time &lt;=  #{endTime}
+      </if>
+    </where>
+  </sql>
 
 </mapper>
