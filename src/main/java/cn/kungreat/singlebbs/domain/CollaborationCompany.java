@@ -24,4 +24,6 @@ public class CollaborationCompany {
     private String businessPeople;
 
     private String linkUrl;
+
+    private Integer baseOrder;
 }
