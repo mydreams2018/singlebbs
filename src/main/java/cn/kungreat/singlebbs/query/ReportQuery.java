@@ -16,6 +16,7 @@ public class ReportQuery extends Paging{
     @JsonIgnore
     private String userAccount;
     private Integer portIsauth;
+    private String partitionName;
     private String tableName;
     private Boolean isTop;
     private String beginTime;

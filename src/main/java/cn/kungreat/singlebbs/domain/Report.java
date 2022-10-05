@@ -31,7 +31,7 @@ public class Report {
     private Date createTime;
 
     private Boolean authFlag;
-
+    private String partitionName;
     private Integer classId;
     private String tableName;
     private String detailsText;

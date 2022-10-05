@@ -19,6 +19,7 @@
     <result column="vip_level"  property="vipLevel"/>
     <result column="authenticate"  property="authenticate" />
     <result column="is_manager"  property="isManager" />
+    <result column="partition_name"  property="partitionName" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from ${tableName}
@@ -30,10 +31,10 @@
        experience, user_account,
       port_state,
       reply_number, look_number, create_time, 
-      auth_flag,is_essence,is_top)
+      auth_flag,is_essence,is_top,partition_name)
     values (#{name,jdbcType=VARCHAR}, #{experience,jdbcType=TINYINT}, #{userAccount},
       '未结',
-      0, 0, #{createTime,jdbcType=DATE}, #{authFlag},0,0)
+      0, 0, #{createTime,jdbcType=DATE}, #{authFlag},0,0,#{partitionName})
   </insert>
   <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.Report">
     update ${tableName}
@@ -58,7 +59,7 @@
 
   <select id="selectByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.Report" resultMap="BaseResultMap">
     SELECT * FROM (select id, port_title, experience, user_account, is_essence,
-    port_state, is_top, reply_number, look_number, create_time, auth_flag
+    port_state, is_top, reply_number, look_number, create_time, auth_flag, partition_name
     from ${tableName}
     where id = #{id} and auth_flag = #{portIsauth}
     ) as port Inner join user us on port.user_account = us.account
@@ -71,21 +72,21 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select * from (select id, port_title, experience, user_account, is_essence,
-    port_state, is_top, reply_number, look_number, create_time, auth_flag
+    port_state, is_top, reply_number, look_number, create_time, auth_flag, partition_name
     from ${tableName} <include refid="baseQuery"/> <include refid="baseOrder"/> limit #{start},#{pageSize})
     as port Inner join user us on port.user_account = us.account
   </select>
 
   <select id="selectById" resultMap="BaseResultMap">
     select id, port_title,  experience, user_account, is_essence,
-    port_state, is_top, reply_number, look_number, create_time, auth_flag
+    port_state, is_top, reply_number, look_number, create_time, auth_flag, partition_name
     from ${tableName}
     where id = #{id}
   </select>
 
   <select id="lastSendPort" resultMap="BaseResultMap">
     select id, port_title, experience, user_account, is_essence,
-    port_state, is_top, reply_number, look_number, create_time, auth_flag, ${classId} as class_id
+    port_state, is_top, reply_number, look_number, create_time, auth_flag, partition_name, ${classId} as class_id
     from ${tableName}
     where user_account = #{userAccount} and auth_flag = #{portIsauth}
     ORDER BY create_time DESC
@@ -134,6 +135,9 @@
       <if test="userAccount != null and userAccount != ''">
         and user_account = #{userAccount}
       </if>
+      <if test="partitionName != null and partitionName != ''">
+        and partition_name = #{partitionName}
+      </if>
       <if test="portState != null and portState != ''">
         and port_state = #{portState}
       </if>
@@ -159,6 +163,9 @@
   </sql>
 
   <sql id="myPortQuery">
+    <if test="partitionName != null and partitionName != ''">
+      and partition_name = #{partitionName}
+    </if>
     <if test="name != null and name != ''">
       and port_title like concat("%",#{name},"%")
     </if>
