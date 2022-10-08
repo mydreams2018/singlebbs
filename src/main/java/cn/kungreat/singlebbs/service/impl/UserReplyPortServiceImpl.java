@@ -24,7 +24,7 @@ public class UserReplyPortServiceImpl implements UserReplyPortService {
         return userReplyPortMapper.selectAll(replyPort);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateByPrimaryKey(){
         UserReplyPort record = new UserReplyPort();
         Calendar instance = Calendar.getInstance();

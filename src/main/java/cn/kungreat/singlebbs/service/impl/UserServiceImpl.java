@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private List<String> manager;
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insert(User record) {
         String s = record.validMessage();
         Assert.isTrue(StringUtils.isEmpty(s),s);
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByPrimaryKey(account);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateByPrimaryKey(User record) {
         Assert.isTrue(StringUtils.isNotEmpty(record.getEmail())
                 && StringUtils.isNotEmpty(record.getFromCity())
@@ -58,12 +58,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateByPrimaryKey(record);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateImg(String account, String path) {
         return userMapper.updateImg(account,path);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateAccumulatePoints(int number, String account) {
         User user = userMapper.selectByPrimaryKey(account);
         Integer accumulatePoints = user.getAccumulatePoints();
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByunique(account,alias);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void rePass(User user) {
         String s = user.validPass();
         Assert.isTrue(StringUtils.isEmpty(s),s);
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         userMapper.repass(name,bCryptPasswordEncoder.encode(user.getRePass()));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void resetPassword(User user) {
         Assert.isTrue(StringUtils.isNotEmpty(user.getAccount())&&StringUtils.isNotEmpty(user.getEmail())
                                 &&StringUtils.isNotEmpty(user.getRePass()),"必要数据不能为空");

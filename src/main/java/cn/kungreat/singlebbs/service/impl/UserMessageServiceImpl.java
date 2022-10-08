@@ -31,7 +31,7 @@ public class UserMessageServiceImpl implements UserMessageService {
         return userMessageMapper.selectCount(query);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByPrimaryKey(Long id) {
         Assert.isTrue(id != null,"ID异常");
         UserMessage userMessage = userMessageMapper.selectByPrimaryKey(id);
@@ -41,19 +41,19 @@ public class UserMessageServiceImpl implements UserMessageService {
         return userMessageMapper.deleteByPrimaryKey(id);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByAccount(UserMessageQuery query) {
         LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         query.setAlias(loginUser.getAlias());
         return userMessageMapper.deleteByAccount(query);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByAll(UserMessageQuery query){
         return userMessageMapper.deleteByAll(query);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void insertBaych(UserMessage userMessage) {
         userMessageMapper.insertBaych(userMessage);
     }

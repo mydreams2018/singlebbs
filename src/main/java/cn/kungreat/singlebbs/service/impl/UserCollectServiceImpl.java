@@ -28,12 +28,12 @@ public class UserCollectServiceImpl implements UserCollectService {
         return userCollectMapper.selectByPrimaryKey(collect);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByPrimaryKey(Long id) {
         return userCollectMapper.deleteByPrimaryKey(id,SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public UserCollect sendCollect(UserCollect collect){
         if(collect.getId() == null){
             Assert.isTrue(collect.getClassId() != null && collect.getPortId() != null,"ID异常");

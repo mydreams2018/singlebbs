@@ -17,7 +17,7 @@ public class Oauth2UserServiceImpl implements Oauth2UserService {
     @Autowired
     private UserService userService;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insert(Oauth2User record,User user){
         oauth2UserMapper.insert(record);
         userService.insert(user);
@@ -33,7 +33,7 @@ public class Oauth2UserServiceImpl implements Oauth2UserService {
         return null;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateByPrimaryKey(Oauth2User record) {
         return oauth2UserMapper.updateByPrimaryKey(record);
     }

@@ -91,7 +91,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         return rt;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public long insert(DetailsText record) {
         String s = record.validMessage();
         Assert.isTrue(StringUtils.isEmpty(s),s);
@@ -110,7 +110,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         return record.getId();
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void likeAccount(DetailsTextQuery query) {
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");
         Assert.isTrue(query.getId()!=null,"ID异常");
@@ -127,7 +127,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         reportMapper.incrementLikeNumber(report);
     }
 //自已删除自已的回贴
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int deleteReplyPort(DetailsTextQuery query) {
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");
         Assert.isTrue(query.getId()!=null,"ID异常");
@@ -156,7 +156,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         return detailsTextMapper.deleteByPrimaryKey(query);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void acceptReply(DetailsTextQuery query) {
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");
         Assert.isTrue(query.getId()!=null,"ID异常");
@@ -187,7 +187,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         return detailsTextMapper.selectByPrimaryKey(query);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateByPrimaryKey(DetailsTextQuery query) {
         Assert.isTrue(StringUtils.isNotEmpty(query.getDetailsText()),"贴子内容不能为空");
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");

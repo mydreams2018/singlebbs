@@ -21,7 +21,7 @@ public class UserSignServiceImpl implements UserSignService {
     @Autowired
     private UserService userService;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insert(UserSign record) {
         record.setLastSignTime(new Date());
         record.setAccumulateSign(1);
@@ -47,12 +47,12 @@ public class UserSignServiceImpl implements UserSignService {
         return userSign;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateByPrimaryKey(UserSign record) {
         return userSignMapper.updateByPrimaryKey(record);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void signOn() {
         UserSign userSign = selectByPrimaryKey();
         if(userSign == null){

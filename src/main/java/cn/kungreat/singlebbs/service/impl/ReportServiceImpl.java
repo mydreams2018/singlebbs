@@ -43,7 +43,7 @@ public class ReportServiceImpl implements ReportService {
         return split.length;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public long insert(Report record) {
         String s = record.validMessage();
         Assert.isTrue(StringUtils.isEmpty(s),s);
@@ -68,7 +68,7 @@ public class ReportServiceImpl implements ReportService {
         return 1;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateByPrimaryKey(Report record) {
         Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
         Assert.isTrue(record.getId() != null,"ID异常");
@@ -89,7 +89,7 @@ public class ReportServiceImpl implements ReportService {
         return 1;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateBystate(Report record) {
         return reportMapper.updateBystate(record);
     }
@@ -126,12 +126,12 @@ public class ReportServiceImpl implements ReportService {
         return result;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void incrementNumber(Report port) {
         reportMapper.incrementNumber(port);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void decrementNumber(Report port) {
         reportMapper.decrementNumber(port);
     }

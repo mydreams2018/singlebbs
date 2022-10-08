@@ -19,7 +19,7 @@ public class PermissionMappingServiceImpl implements PermissionMappingService {
     @Value("#{'${user.manager}'.split(',')}")
     private List<String> manager;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insertBatch(List<String> record,String account) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(manager.contains(name),"没有权限访问");

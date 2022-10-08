@@ -7,6 +7,7 @@ import cn.kungreat.singlebbs.service.CollaborationCompanyService;
 import cn.kungreat.singlebbs.vo.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,12 +17,14 @@ public class CollaborationCompanyServiceImpl implements CollaborationCompanyServ
     private CollaborationCompanyMapper collaborationCompanyMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int deleteByPrimaryKey(Integer id) {
         return collaborationCompanyMapper.deleteByPrimaryKey(id);
     }
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insert(CollaborationCompany record) {
         return collaborationCompanyMapper.insert(record);
     }
@@ -49,6 +52,7 @@ public class CollaborationCompanyServiceImpl implements CollaborationCompanyServ
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateByPrimaryKey(CollaborationCompany record) {
         return collaborationCompanyMapper.updateByPrimaryKey(record);
     }
