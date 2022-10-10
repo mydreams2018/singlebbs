@@ -7,3 +7,5 @@ git push origin --delete branchName删除每个版本后不用的分支
 git remote prune origin
 如果要在每次抓取操作时都执行修剪，可以相应地配置 Git：
 git config --global fetch.prune true
+
+类.<>静态方法() 指定泛型
