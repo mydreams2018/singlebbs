@@ -14,6 +14,8 @@ public interface DetailsTextMapper {
     long insert(DetailsText record);
 
     DetailsText selectByPrimaryKey(DetailsTextQuery query);
+
+    DetailsText selectByPrimaryKeyUpdate(DetailsTextQuery query);
     DetailsText selectByPort(DetailsText record);
 
     Integer selectCount(DetailsTextQuery query);

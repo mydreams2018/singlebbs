@@ -20,6 +20,7 @@
     <result column="authenticate"  property="authenticate" />
     <result column="is_manager"  property="isManager" />
     <result column="partition_name"  property="partitionName" />
+    <result column="auth_describe"  property="authDescribe" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from ${tableName}
@@ -95,38 +96,38 @@
 
   <select id="mySelectCount" resultType="java.lang.Integer">
   select sum(rt.num) from (
-    select count(id) as num from report_back where user_account = #{userAccount} and auth_flag = 1
+    select count(id) as num from report_back where user_account = #{userAccount} and auth_flag = #{authFlag}
                                                 <include refid="myPortQuery" />
     UNION ALL
-    select count(id) as num from report_front where user_account = #{userAccount} and auth_flag = 1
+    select count(id) as num from report_front where user_account = #{userAccount} and auth_flag = #{authFlag}
                                                 <include refid="myPortQuery" />
     UNION ALL
-    select count(id) as num from report_data where user_account = #{userAccount} and auth_flag = 1
+    select count(id) as num from report_data where user_account = #{userAccount} and auth_flag = #{authFlag}
                                                 <include refid="myPortQuery" />
     UNION ALL
-    select count(id) as num from report_talk where user_account = #{userAccount} and auth_flag = 1
+    select count(id) as num from report_talk where user_account = #{userAccount} and auth_flag = #{authFlag}
                                                 <include refid="myPortQuery" />
                                              ) rt
   </select>
 
   <select id="mySelectAll" resultMap="BaseResultMap">
-     select id, port_title, is_essence,is_top, reply_number, look_number, create_time, class_id
+     select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe, class_id
      from (
-     select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+     select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
      '1' as class_id from report_back
-     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
+     where user_account = #{userAccount} and auth_flag = #{authFlag}  <include refid="myPortQuery" />
      UNION ALL
-      select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+      select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
      '2' as class_id from report_front
-     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
+     where user_account = #{userAccount} and auth_flag = #{authFlag}  <include refid="myPortQuery" />
      UNION ALL
-    select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+    select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
      '3' as class_id from report_data
-     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
+     where user_account = #{userAccount} and auth_flag = #{authFlag}  <include refid="myPortQuery" />
      UNION ALL
-    select id, port_title, is_essence,is_top, reply_number, look_number, create_time,
+    select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
      '4' as class_id from report_talk
-     where user_account = #{userAccount} and auth_flag = 1  <include refid="myPortQuery" />
+     where user_account = #{userAccount} and auth_flag = #{authFlag}  <include refid="myPortQuery" />
      ) rt ORDER BY create_time DESC limit #{start},#{pageSize}
   </select>
 
@@ -147,7 +148,7 @@
       <if test="isTop != null">
         and is_top = 1
       </if>
-      <if test="portIsauth != 0">
+      <if test="portIsauth != null">
         and auth_flag = 1
       </if>
       <if test="name != null and name != ''">

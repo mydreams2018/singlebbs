@@ -26,7 +26,7 @@ public class DetailsText {
     private Date createData;
 
     private Integer authFlag;
-
+    private String authDescribe;
     private String detailsText;
     private Boolean isPort;
     private Long replyParent;

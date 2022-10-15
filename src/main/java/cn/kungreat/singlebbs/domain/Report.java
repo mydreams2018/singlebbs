@@ -32,6 +32,7 @@ public class Report {
 
     private Integer authFlag;
     private String partitionName;
+    private String authDescribe;
     private Integer classId;
     private String tableName;
     private String detailsText;

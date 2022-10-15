@@ -191,8 +191,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         Assert.isTrue(StringUtils.isNotEmpty(query.getDetailsText()),"贴子内容不能为空");
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");
         Assert.isTrue(query.getId()!=null,"ID异常");
-        query.setPortIsauth(1);
-        DetailsText detailsText = detailsTextMapper.selectByPrimaryKey(query);
+        DetailsText detailsText = detailsTextMapper.selectByPrimaryKeyUpdate(query);
         Assert.isTrue(detailsText!=null,"贴子异常");
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(name.equals(detailsText.getUserAccount()),"无权限操作此贴");

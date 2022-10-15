@@ -19,6 +19,7 @@
     <result column="vip_level"  property="vipLevel"/>
     <result column="authenticate"  property="authenticate" />
     <result column="is_manager"  property="isManager" />
+    <result column="auth_describe"  property="authDescribe" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="cn.kungreat.singlebbs.query.DetailsTextQuery">
     delete from ${tableName}
@@ -33,10 +34,10 @@
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.DetailsText" useGeneratedKeys="true">
     insert into ${tableName} (like_number,is_adoption ,port_id,
       user_account, create_data, auth_flag,
-      details_text, is_port,reply_parent)
+      details_text, is_port,reply_parent,auth_describe)
     values (0, 0,#{portId},
       #{userAccount}, #{createData}, #{authFlag},
-      #{detailsText}, #{isPort}, #{replyParent})
+      #{detailsText}, #{isPort}, #{replyParent},#{authDescribe})
   </insert>
     <update id="updateByPrimaryKey">
     update ${tableName}
@@ -76,9 +77,16 @@
     where id = #{id,jdbcType=BIGINT} and auth_flag = #{portIsauth}
   </select>
 
+  <select id="selectByPrimaryKeyUpdate" resultMap="BaseResultMap">
+    select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
+           details_text, is_port
+    from ${tableName}
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
   <select id="selectByPort" parameterType="cn.kungreat.singlebbs.domain.DetailsText" resultMap="BaseResultMap">
     select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
-    details_text, is_port,like_account
+    details_text, is_port,like_account, auth_describe
     from  ${tableName}  where port_id = #{portId} and is_port=1 and auth_flag = #{portIsauth}
   </select>
 
@@ -89,7 +97,7 @@
 
   <select id="selectAll" resultMap="BaseResultMap">
     select id, is_adoption, like_number, port_id, user_account, create_data, auth_flag,
-    details_text, is_port,reply_parent
+    details_text, is_port,reply_parent, auth_describe
     from ${tableName} <include refid="baseQuery"/> <include refid="baseOrder"/> limit #{start},#{pageSize}
   </select>
 
@@ -130,34 +138,34 @@
 
     <select id="myReplyPortsCount" resultType="java.lang.Integer">
       select sum(rt.num) from (
-        select count(id) as num from details_text_back where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        select count(id) as num from details_text_back where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0
         <include refid="myReplyPortQuery" />
         UNION ALL
-        select count(id) as num from details_text_front where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        select count(id) as num from details_text_front where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0
         <include refid="myReplyPortQuery" />
         UNION ALL
-        select count(id) as num from details_text_data where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        select count(id) as num from details_text_data where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0
         <include refid="myReplyPortQuery" />
         UNION ALL
-        select count(id) as num from details_text_talk where user_account = #{userAccount} and auth_flag = 1 and is_port=0
+        select count(id) as num from details_text_talk where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0
         <include refid="myReplyPortQuery" />
       ) rt
     </select>
 
   <select id="myReplyPortsAll" resultMap="BaseResultMap" >
-    select id, details_text, port_id,create_data, class_id
+    select id, details_text, port_id,create_data,auth_describe , class_id
     from (
-    select id, details_text, port_id,create_data, '1' as class_id from details_text_back
-    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    select id, details_text, port_id,create_data,auth_describe , '1' as class_id from details_text_back
+    where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0 <include refid="myReplyPortQuery" />
     UNION ALL
-    select id,  details_text, port_id,create_data,'2' as class_id from details_text_front
-    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    select id,  details_text, port_id,create_data,auth_describe ,'2' as class_id from details_text_front
+    where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0 <include refid="myReplyPortQuery" />
     UNION ALL
-    select id,  details_text,port_id,create_data, '3' as class_id from details_text_data
-    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    select id,  details_text,port_id,create_data,auth_describe , '3' as class_id from details_text_data
+    where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0 <include refid="myReplyPortQuery" />
     UNION ALL
-    select id, details_text, port_id,create_data,'4' as class_id from details_text_talk
-    where user_account = #{userAccount} and auth_flag = 1 and is_port=0 <include refid="myReplyPortQuery" />
+    select id, details_text, port_id,create_data,auth_describe ,'4' as class_id from details_text_talk
+    where user_account = #{userAccount} and auth_flag = #{authFlag} and is_port=0 <include refid="myReplyPortQuery" />
     ) rt ORDER BY create_data DESC limit #{start},#{pageSize}
   </select>
 
@@ -166,7 +174,7 @@
       <if test="portId != null">
         and port_id = #{portId} and is_port!=1
       </if>
-      <if test="portIsauth != 0">
+      <if test="portIsauth != null">
         and auth_flag = 1
       </if>
   </sql>

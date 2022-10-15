@@ -21,6 +21,7 @@ public class ReportQuery extends Paging{
     private Boolean isTop;
     private String beginTime;
     private String endTime;
+    private Integer authFlag;
     public String getTableName(){
         switch (classId){
             case 1:
