@@ -13,7 +13,7 @@ public class DetailsTextQuery extends Paging{
     private String likeAccount;
     private Integer likeNumber;
     private Long portId;
-    private Boolean authFlag;
+    private Integer authFlag;
     private String orderType;
     private Integer classId;
     private String tableName;

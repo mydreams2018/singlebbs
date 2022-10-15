@@ -24,5 +24,5 @@ public class UserMessage {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date receiveDate;
 
-    private Boolean authFlag;
+    private Integer authFlag;
 }

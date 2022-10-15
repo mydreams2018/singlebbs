@@ -9,7 +9,7 @@
     <result column="src_alias" jdbcType="VARCHAR" property="srcAlias" />
     <result column="receive_alias" jdbcType="VARCHAR" property="receiveAlias" />
     <result column="receive_date" jdbcType="DATE" property="receiveDate" />
-    <result column="auth_flag" jdbcType="BIT" property="authFlag" />
+    <result column="auth_flag" jdbcType="INTEGER" property="authFlag" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from user_message

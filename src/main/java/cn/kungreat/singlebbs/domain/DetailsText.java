@@ -25,7 +25,7 @@ public class DetailsText {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createData;
 
-    private Boolean authFlag;
+    private Integer authFlag;
 
     private String detailsText;
     private Boolean isPort;

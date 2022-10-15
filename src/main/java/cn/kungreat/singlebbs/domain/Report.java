@@ -30,7 +30,7 @@ public class Report {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createTime;
 
-    private Boolean authFlag;
+    private Integer authFlag;
     private String partitionName;
     private Integer classId;
     private String tableName;

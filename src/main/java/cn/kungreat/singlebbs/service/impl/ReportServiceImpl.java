@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
         record.setUserAccount(name);
         Date date = new Date();
         record.setCreateTime(date);
-        record.setAuthFlag(portIsauth.equals(1));
+        record.setAuthFlag(portIsauth);
         reportMapper.insert(record);
         DetailsText details = new DetailsText();
         details.setIsPort(true);
@@ -63,7 +63,7 @@ public class ReportServiceImpl implements ReportService {
         details.setDetailsText(record.getDetailsText());
         details.setUserAccount(name);
         details.setClassId(record.getClassId());
-        details.setAuthFlag(portIsauth.equals(1));
+        details.setAuthFlag(portIsauth);
         detailsTextMapper.insert(details);
         return 1;
     }
@@ -78,13 +78,13 @@ public class ReportServiceImpl implements ReportService {
         Assert.isTrue(port != null,"贴子异常");
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(name.equals(port.getUserAccount()),"没有权限操作");
-        record.setAuthFlag(portIsauth.equals(1));
+        record.setAuthFlag(portIsauth);
         reportMapper.updateByPrimaryKey(record);
         DetailsText detailsText = new DetailsText();
         detailsText.setClassId(record.getClassId());
         detailsText.setPortId(record.getId());
         detailsText.setDetailsText(record.getDetailsText());
-        detailsText.setAuthFlag(portIsauth.equals(1));
+        detailsText.setAuthFlag(portIsauth);
         detailsTextMapper.updateByPortId(detailsText);
         return 1;
     }

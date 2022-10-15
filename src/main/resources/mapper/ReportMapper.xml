@@ -12,7 +12,7 @@
     <result column="reply_number" jdbcType="TINYINT" property="replyNumber" />
     <result column="look_number" jdbcType="TINYINT" property="lookNumber" />
     <result column="create_time" jdbcType="DATE" property="createTime" />
-    <result column="auth_flag" jdbcType="BIT" property="authFlag" />
+    <result column="auth_flag" jdbcType="INTEGER" property="authFlag" />
     <result column="class_id" property="classId" />
     <result column="alias" jdbcType="VARCHAR" property="alias" />
     <result column="img" jdbcType="VARCHAR" property="userImg" />

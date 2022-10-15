@@ -100,7 +100,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         record.setUserAccount(name);
         Date date = new Date();
         record.setCreateData(date);
-        record.setAuthFlag(portIsauth.equals(1));
+        record.setAuthFlag(portIsauth);
         detailsTextMapper.insert(record);
         Report report = new Report();
         report.setClassId(record.getClassId());
@@ -131,7 +131,6 @@ public class DetailsTextServiceImpl implements DetailsTextService {
     public int deleteReplyPort(DetailsTextQuery query) {
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");
         Assert.isTrue(query.getId()!=null,"ID异常");
-        query.setPortIsauth(1);
         DetailsText detailsText = detailsTextMapper.selectByPrimaryKey(query);
         Assert.isTrue(detailsText!=null,"贴子异常");
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -197,7 +196,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         Assert.isTrue(detailsText!=null,"贴子异常");
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(name.equals(detailsText.getUserAccount()),"无权限操作此贴");
-        query.setAuthFlag(portIsauth.equals(1));
+        query.setAuthFlag(portIsauth);
         detailsTextMapper.updateByPrimaryKey(query);
     }
 //用户首页最近的回贴
