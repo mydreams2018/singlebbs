@@ -13,4 +13,5 @@ public interface PermissionMapper {
     List<String> selectPermissions(String account);
     void deleteAll();
     int insertBatch(@Param("ps") List<Permission> record);
+    int deleteRepeat();
 }

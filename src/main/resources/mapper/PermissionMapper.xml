@@ -19,6 +19,19 @@
   <delete id="deleteAll">
     delete from permission
   </delete>
+<!--  修改一个表的时候子查询不能是这被修改的这个表,所以解决办法是在子查询外面再套一层查询语句就可以了 -->
+  <delete id="deleteRepeat">
+    delete from permission
+    where (permission_methods,descript) in (
+      select permission_methods, descript from (
+      select permission_methods, descript from permission
+      group by permission_methods, descript having count(*) > 1 ) as inner_table
+    ) and id not in (
+      select kid from (
+      select min(id) as kid from permission
+      group by permission_methods, descript having count(*) > 1) as keep_id
+    )
+  </delete>
   <select id="selectAll" resultMap="BaseResultMap">
     select permission_methods, descript
     from permission
