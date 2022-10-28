@@ -5,6 +5,7 @@ import cn.kungreat.singlebbs.domain.Oauth2User;
 import cn.kungreat.singlebbs.domain.User;
 import cn.kungreat.singlebbs.service.Oauth2UserService;
 import cn.kungreat.singlebbs.service.PermissionService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,18 +43,18 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
         Map<String, Object> additionalParameters = userRequest.getAdditionalParameters();
         String tokenValue = userRequest.getAccessToken().getTokenValue();
         ResponseEntity<String> response;
-        Map<String,Object> userAttributes;
+        Map<String,String> userAttributes;
         String openid ;
         try {
             ResponseEntity<String> forEntity = this.restOperations.getForEntity("https://graph.qq.com/oauth2.0/me?access_token="
                     + tokenValue, String.class);
             String body = forEntity.getBody();
             String replace = body.substring(9,body.length()-4);
-            Map<String,Object> stringObjectMap = SinglebbsApplication.MAP_JSON.readValue(replace,Map.class);
-            openid = stringObjectMap.get("openid").toString();
+            Map<String,String> stringObjectMap = SinglebbsApplication.MAP_JSON.readValue(replace, new TypeReference<Map<String, String>>(){});
+            openid = stringObjectMap.get("openid");
             response = this.restOperations.getForEntity(clientRegistration.getProviderDetails().getUserInfoEndpoint().getUri()+"?access_token="
                     +tokenValue+"&oauth_consumer_key="+clientRegistration.getClientId()+"&openid="+ openid,String.class);
-            userAttributes = SinglebbsApplication.MAP_JSON.readValue(response.getBody(),Map.class);
+            userAttributes = SinglebbsApplication.MAP_JSON.readValue(response.getBody(), new TypeReference<Map<String, String>>(){});
         }catch(Exception ex){
             OAuth2Error oauth2Error = new OAuth2Error("invalid_user_info_response",
                     "An error occurred while attempting to retrieve the UserInfo Resource: " + ex.getMessage(), null);
@@ -66,8 +67,8 @@ public class MyOAuth2UserService implements OAuth2UserService<OAuth2UserRequest,
             temp.setAccount(s);
             temp.setOriginFrom(clientRegistration.getRegistrationId());
             temp.setPassword("yjssaje");
-            temp.setImg(userAttributes.get("figureurl_1").toString());
-            String nickname = userAttributes.get("nickname").toString();
+            temp.setImg(userAttributes.get("figureurl_1"));
+            String nickname = userAttributes.get("nickname");
             if(nickname.length()>6){
                 nickname = nickname.substring(0,6);
             }

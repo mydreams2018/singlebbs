@@ -2,6 +2,7 @@ package cn.kungreat.singlebbs.security;
 
 import cn.kungreat.singlebbs.SinglebbsApplication;
 import cn.kungreat.singlebbs.secure.CipherUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -36,7 +37,7 @@ public class TokenManagerFilter extends OncePerRequestFilter {
         if(jwtToken !=null &&!jwtToken.isBlank() && authentication instanceof AnonymousAuthenticationToken){
             try {
                 String deCode = CipherUtils.DEFAULTA.decryptByIV(jwtToken,"AES/CBC/PKCS5Padding");
-                Map<String,String> mapTokens = SinglebbsApplication.MAP_JSON.readValue(deCode, Map.class);
+                Map<String,String> mapTokens = SinglebbsApplication.MAP_JSON.readValue(deCode, new TypeReference<Map<String, String>>(){});
                 UserDetails user = myUserDetails.loadUserByUsername(mapTokens.get("username"));
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken =
