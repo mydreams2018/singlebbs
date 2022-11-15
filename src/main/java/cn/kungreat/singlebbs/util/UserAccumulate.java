@@ -69,7 +69,7 @@ public class UserAccumulate {
             for(int x=0;x<fields.length;x++){
                 Field field = fields[x];
                 field.setAccessible(true);
-                if(field.getName() !="account" && field.getName() !="password"){
+                if(!field.getName().equals("account") && !field.getName().equals("password")){
                     if(field.getType() == Date.class){
                         Object o = field.get(bean);
                         mp.put(field.getName(),simpleDateFormat.format(o));

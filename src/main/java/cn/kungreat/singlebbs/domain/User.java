@@ -86,6 +86,6 @@ public class User{
     }
 
     public String getAlias(){
-        return alias!=null?alias.trim():alias;
+        return alias!=null?alias.trim(): null;
     }
 }

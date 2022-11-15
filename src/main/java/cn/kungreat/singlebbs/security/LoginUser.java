@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginUser implements UserDetails, OAuth2User {
-    private Collection<? extends GrantedAuthority> grantedAuthorities;
-    private User user;
-    private Map<String, Object> oauth2User = new HashMap<>();
+    private final Collection<? extends GrantedAuthority> grantedAuthorities;
+    private final User user;
+    private final Map<String, Object> oauth2User = new HashMap<>();
     public LoginUser(User user,Collection<? extends GrantedAuthority> grantedAuthorities){
         this.user = user;
         this.grantedAuthorities = grantedAuthorities;

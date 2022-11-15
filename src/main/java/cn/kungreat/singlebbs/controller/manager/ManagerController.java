@@ -1,12 +1,19 @@
 package cn.kungreat.singlebbs.controller.manager;
 
+import cn.kungreat.singlebbs.mapper.ManagerMapper;
 import cn.kungreat.singlebbs.query.UserQuery;
+import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.UserService;
 import cn.kungreat.singlebbs.vo.ManagerResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -14,15 +21,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManagerController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private ManagerMapper managerMapper;
 
-    @RequestMapping(value = "/getAllUser",method = RequestMethod.POST)
-    public ManagerResult getAllUser(UserQuery userQuery){
-        if(userQuery.getPage() != null && userQuery.getPage() > 0){
+    @RequestMapping(value = "/getAllUser", method = RequestMethod.POST)
+    public ManagerResult getAllUser(UserQuery userQuery) {
+        if (userQuery.getPage() != null && userQuery.getPage() > 0) {
             userQuery.setCurrentPage(userQuery.getPage());
         }
-        if(userQuery.getLimit() != null && userQuery.getLimit() > 0){
+        if (userQuery.getLimit() != null && userQuery.getLimit() > 0) {
             userQuery.setPageSize(userQuery.getLimit());
         }
         return userService.getAllUser(userQuery);
+    }
+
+    @RequestMapping(value = "/selectAuthCount", method = RequestMethod.POST)
+    public Map<String, Integer> selectAuthCount() {
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Byte isManager = loginUser.getUser().getIsManager();
+        Assert.isTrue(isManager == 1, "不是管理员,没权审核");
+        Map<String, Integer> map = new HashMap<>();
+        map.put("port", managerMapper.selectAuthPorts());
+        map.put("answerPort", managerMapper.selectAuthAnswerPorts());
+        return map;
     }
 }
