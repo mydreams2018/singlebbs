@@ -4,7 +4,7 @@ import cn.kungreat.singlebbs.mapper.ManagerMapper;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.UserService;
-import cn.kungreat.singlebbs.vo.ManagerResult;
+import cn.kungreat.singlebbs.vo.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
@@ -25,13 +25,7 @@ public class ManagerController {
     private ManagerMapper managerMapper;
 
     @RequestMapping(value = "/getAllUser", method = RequestMethod.POST)
-    public ManagerResult getAllUser(UserQuery userQuery) {
-        if (userQuery.getPage() != null && userQuery.getPage() > 0) {
-            userQuery.setCurrentPage(userQuery.getPage());
-        }
-        if (userQuery.getLimit() != null && userQuery.getLimit() > 0) {
-            userQuery.setPageSize(userQuery.getLimit());
-        }
+    public QueryResult getAllUser(UserQuery userQuery) {
         return userService.getAllUser(userQuery);
     }
 

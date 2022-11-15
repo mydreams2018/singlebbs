@@ -2,7 +2,7 @@ package cn.kungreat.singlebbs.service;
 
 import cn.kungreat.singlebbs.domain.User;
 import cn.kungreat.singlebbs.query.UserQuery;
-import cn.kungreat.singlebbs.vo.ManagerResult;
+import cn.kungreat.singlebbs.vo.QueryResult;
 
 
 public interface UserService {
@@ -20,5 +20,5 @@ public interface UserService {
 
     void resetPassword(User user);
 
-    ManagerResult getAllUser(UserQuery userQuery);
+    QueryResult getAllUser(UserQuery userQuery);
 }

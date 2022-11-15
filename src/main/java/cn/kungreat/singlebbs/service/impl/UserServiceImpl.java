@@ -5,7 +5,7 @@ import cn.kungreat.singlebbs.mapper.UserMapper;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.UserService;
 import cn.kungreat.singlebbs.util.UserAccumulate;
-import cn.kungreat.singlebbs.vo.ManagerResult;
+import cn.kungreat.singlebbs.vo.QueryResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -99,9 +99,9 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(bCryptPasswordEncoder.matches(user.getEmail(),origin.getEmail()),"密保验证失败");
         userMapper.repass(user.getAccount(),bCryptPasswordEncoder.encode(user.getRePass()));
     }
-//管理层用的
+
     @Override
-    public ManagerResult getAllUser(UserQuery userQuery) {
+    public QueryResult getAllUser(UserQuery userQuery) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(manager.contains(name),"没有权限查询此接口");
         int num = userMapper.selectCount(userQuery);
@@ -109,11 +109,10 @@ public class UserServiceImpl implements UserService {
         if(num > 0){
             list = userMapper.selectAll(userQuery);
         }
-//        userQuery.setData(num,userQuery.getPageSize(),userQuery.getCurrentPage());
-        ManagerResult result = new ManagerResult();
-        result.setCount(num);
-        result.setData(list);
-//        result.setPage(userQuery);
+        userQuery.setData(num,userQuery.getPageSize(),userQuery.getCurrentPage());
+        QueryResult result = new QueryResult();
+        result.setDatas(list);
+        result.setPage(userQuery);
         return result;
     }
 }
