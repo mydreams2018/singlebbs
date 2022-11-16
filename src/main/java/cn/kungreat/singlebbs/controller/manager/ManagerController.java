@@ -26,6 +26,7 @@ public class ManagerController {
 
     @RequestMapping(value = "/getAllUser", method = RequestMethod.POST)
     public QueryResult getAllUser(UserQuery userQuery) {
+        userQuery.setClassId(1);//返回json格式代时需要
         return userService.getAllUser(userQuery);
     }
 
