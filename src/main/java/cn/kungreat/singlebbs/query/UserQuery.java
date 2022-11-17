@@ -17,6 +17,7 @@ public class UserQuery extends Paging {
     private String startTime;
     private String endTime;
     private String idList;
+    private boolean curStatus;
 
     public String getTableName(){
         switch (classId){

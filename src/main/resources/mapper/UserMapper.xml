@@ -59,7 +59,7 @@
 
     <delete id="deleteUser">
       update user
-      set state = 0
+      set state = ${curStatus}
       where id in (${idList})
     </delete>
 
