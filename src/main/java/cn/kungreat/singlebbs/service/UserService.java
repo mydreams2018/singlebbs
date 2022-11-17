@@ -21,4 +21,6 @@ public interface UserService {
     void resetPassword(User user);
 
     QueryResult getAllUser(UserQuery userQuery);
+
+    int deleteUser(UserQuery userQuery);
 }

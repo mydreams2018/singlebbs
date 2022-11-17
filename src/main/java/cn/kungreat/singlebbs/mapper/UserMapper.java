@@ -26,4 +26,6 @@ public interface UserMapper {
     User selectByunique(@Param("account") String account, @Param("alias") String alias);
 
     int repass(@Param("account") String account, @Param("repass") String repass);
+
+    int deleteUser(UserQuery userQuery);
 }

@@ -57,7 +57,13 @@
       where account = #{account}
   </update>
 
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    <delete id="deleteUser">
+      update user
+      set state = 0
+      where id in (${idList})
+    </delete>
+
+    <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select id, account, password, alias, img, state, email, description, register_time, vip_level,
     origin_from, register_year, accumulate_points, is_manager, from_city, authenticate
     from user

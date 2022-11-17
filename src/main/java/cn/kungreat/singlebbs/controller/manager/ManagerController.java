@@ -4,6 +4,7 @@ import cn.kungreat.singlebbs.mapper.ManagerMapper;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.UserService;
+import cn.kungreat.singlebbs.vo.JsonResult;
 import cn.kungreat.singlebbs.vo.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,19 @@ public class ManagerController {
     public QueryResult getAllUser(UserQuery userQuery) {
         userQuery.setClassId(1);//返回json格式代时需要
         return userService.getAllUser(userQuery);
+    }
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    public JsonResult deleteUser(UserQuery userQuery) {
+        JsonResult jsonResult = new JsonResult();
+        try{
+            userService.deleteUser(userQuery);
+            jsonResult.setMsg("success");
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
     }
 
     @RequestMapping(value = "/selectAuthCount", method = RequestMethod.POST)
