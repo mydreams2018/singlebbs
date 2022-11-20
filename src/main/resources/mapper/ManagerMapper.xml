@@ -2,6 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.kungreat.singlebbs.mapper.ManagerMapper">
 
+    <resultMap id="ResultPortMap" type="cn.kungreat.singlebbs.domain.Report">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="port_title" jdbcType="VARCHAR" property="name" />
+        <result column="experience" jdbcType="TINYINT" property="experience" />
+        <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+        <result column="is_essence" jdbcType="BIT" property="isEssence" />
+        <result column="port_state" jdbcType="VARCHAR" property="portState" />
+        <result column="is_top" jdbcType="BIT" property="isTop" />
+        <result column="reply_number" jdbcType="TINYINT" property="replyNumber" />
+        <result column="look_number" jdbcType="TINYINT" property="lookNumber" />
+        <result column="create_time" jdbcType="DATE" property="createTime" />
+        <result column="auth_flag" jdbcType="INTEGER" property="authFlag" />
+        <result column="class_id" property="classId" />
+        <result column="alias" jdbcType="VARCHAR" property="alias" />
+        <result column="img" jdbcType="VARCHAR" property="userImg" />
+        <result column="vip_level"  property="vipLevel"/>
+        <result column="authenticate"  property="authenticate" />
+        <result column="is_manager"  property="isManager" />
+        <result column="partition_name"  property="partitionName" />
+        <result column="auth_describe"  property="authDescribe" />
+    </resultMap>
 
   <select id="selectAuthPorts" resultType="java.lang.Integer">
     select sum(num) from
@@ -24,5 +45,42 @@
        union all
        select count(id) as num from details_text_talk where auth_flag=0) as AuthCount
   </select>
+
+    <select id="getAllPorts" resultMap="ResultPortMap">
+        select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe, class_id
+        from (
+        select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
+        '1' as class_id from report_back
+        where auth_flag = #{authFlag}  <include refid="PortQuery" />
+        ORDER BY create_time DESC limit #{start},#{pageSize}
+        UNION ALL
+        select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
+        '2' as class_id from report_front
+        where auth_flag = #{authFlag}  <include refid="PortQuery" />
+        ORDER BY create_time DESC limit #{start},#{pageSize}
+        UNION ALL
+        select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
+        '3' as class_id from report_data
+        where auth_flag = #{authFlag}  <include refid="PortQuery" />
+        ORDER BY create_time DESC limit #{start},#{pageSize}
+        UNION ALL
+        select id, port_title, is_essence,is_top, reply_number, look_number, create_time, auth_describe,
+        '4' as class_id from report_talk
+        where auth_flag = #{authFlag}  <include refid="PortQuery" />
+        ORDER BY create_time DESC limit #{start},#{pageSize}
+        ) as rt
+    </select>
+
+    <sql id="PortQuery">
+        <if test="name != null and name != ''">
+            and port_title like concat("%",#{name},"%")
+        </if>
+        <if test="beginTime != null and beginTime !='' ">
+            and create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !='' ">
+            and create_time &lt;=  #{endTime}
+        </if>
+    </sql>
 
 </mapper>
