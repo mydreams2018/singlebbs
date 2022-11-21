@@ -12,4 +12,6 @@ public interface ManagerService {
     Map<String, Integer> selectAuthCount();
 
     Report selectByPrimaryKey(Report record);
+
+    void updatePortAuth(Report reportQuery);
 }

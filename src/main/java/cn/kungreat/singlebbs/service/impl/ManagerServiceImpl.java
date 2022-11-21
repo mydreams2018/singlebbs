@@ -5,12 +5,12 @@ import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ManagerMapper;
 import cn.kungreat.singlebbs.mapper.ReportMapper;
+import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
-import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
@@ -54,5 +54,19 @@ public class ManagerServiceImpl implements ManagerService {
             report.setDetails(detailsTextMapper.selectByPort(de));
         }
         return report;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePortAuth(Report record) {
+        Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
+        Assert.isTrue(record.getId() != null,"ID异常");
+        if(managerMapper.updatePortAuth(record) > 0){
+            DetailsTextQuery detailsTextQuery = new DetailsTextQuery();
+            detailsTextQuery.setClassId(record.getClassId());
+            detailsTextQuery.setPortId(record.getId());
+            detailsTextQuery.setAuthFlag(record.getAuthFlag());
+            managerMapper.updatePortAuthDetails(detailsTextQuery);
+        }
     }
 }

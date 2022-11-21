@@ -16,6 +16,9 @@ import java.io.IOException;
 
 public class AuthManagerFilter extends OncePerRequestFilter {
 
+    /*
+    * TokenManagerFilter 之后
+    */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();

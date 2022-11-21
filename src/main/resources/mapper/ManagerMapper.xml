@@ -24,7 +24,19 @@
         <result column="auth_describe"  property="authDescribe" />
     </resultMap>
 
-  <select id="selectAuthPorts" resultType="java.lang.Integer">
+    <update id="updatePortAuth">
+        update ${tableName}
+        set auth_flag = ${authFlag}
+        where id = #{id}
+    </update>
+
+    <update id="updatePortAuthDetails">
+        update ${tableName}
+        set auth_flag = ${authFlag}
+        where port_id = #{portId} and is_port = 1
+    </update>
+
+    <select id="selectAuthPorts" resultType="java.lang.Integer">
     select sum(num) from
     (select count(id) as num from report_back where auth_flag=0
     union all

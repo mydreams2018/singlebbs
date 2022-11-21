@@ -33,6 +33,19 @@ public class ManagerController {
     public List<Report> getAllPorts(ReportQuery reportQuery) {
         return managerService.getAllPorts(reportQuery);
     }
+    @RequestMapping(value = "/updatePortAuth", method = RequestMethod.POST)
+    public JsonResult updatePortAuth(Report reportQuery) {
+        JsonResult jsonResult = new JsonResult();
+        try{
+            managerService.updatePortAuth(reportQuery);
+            jsonResult.setMsg("success");
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
+    }
 
     @RequestMapping(value = "/selectByPrimaryKey",method = RequestMethod.POST)
     public Report selectByPrimaryKey(Report record){
