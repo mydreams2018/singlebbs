@@ -10,4 +10,6 @@ public interface ManagerService {
     List<Report> getAllPorts(ReportQuery reportQuery);
 
     Map<String, Integer> selectAuthCount();
+
+    Report selectByPrimaryKey(Report record);
 }

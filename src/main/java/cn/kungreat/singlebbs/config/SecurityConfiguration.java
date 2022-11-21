@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.session.SessionManagementFilter;
 
 import javax.servlet.ServletException;
@@ -71,6 +72,7 @@ public class SecurityConfiguration {
                 )
                 .addFilterBefore(new ImageFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new TokenManagerFilter(userDetailsService), SessionManagementFilter.class)
+                .addFilterAfter(new AuthManagerFilter(), SwitchUserFilter.class)
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
                 .formLogin().loginPage("/index").loginProcessingUrl("/defaultLogin").permitAll()

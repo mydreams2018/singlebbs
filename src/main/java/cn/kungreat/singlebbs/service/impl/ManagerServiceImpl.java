@@ -1,7 +1,10 @@
 package cn.kungreat.singlebbs.service.impl;
 
+import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
+import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ManagerMapper;
+import cn.kungreat.singlebbs.mapper.ReportMapper;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.ManagerService;
@@ -19,24 +22,37 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Autowired
     private ManagerMapper managerMapper;
+    @Autowired
+    private ReportMapper reportMapper;
+    @Autowired
+    private DetailsTextMapper detailsTextMapper;
 
     @Override
     public List<Report> getAllPorts(ReportQuery reportQuery) {
-        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Byte isManager = loginUser.getUser().getIsManager();
-        Assert.isTrue(isManager == 1, "不是管理员,没权审核");
         return managerMapper.getAllPorts(reportQuery);
     }
 
 
     @Override
     public Map<String, Integer> selectAuthCount() {
-        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Byte isManager = loginUser.getUser().getIsManager();
-        Assert.isTrue(isManager == 1, "不是管理员,没权审核");
         Map<String, Integer> map = new HashMap<>();
         map.put("port", managerMapper.selectAuthPorts());
         map.put("answerPort", managerMapper.selectAuthAnswerPorts());
         return map;
+    }
+
+    @Override
+    public Report selectByPrimaryKey(Report record) {
+        Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
+        Assert.isTrue(record.getId() != null,"ID异常");
+        Report report = reportMapper.selectByPrimaryKey(record);
+        if(report != null){
+            DetailsText de = new DetailsText();
+            de.setPortId(record.getId());
+            de.setClassId(record.getClassId());
+            de.setPortIsauth(record.getPortIsauth());
+            report.setDetails(detailsTextMapper.selectByPort(de));
+        }
+        return report;
     }
 }

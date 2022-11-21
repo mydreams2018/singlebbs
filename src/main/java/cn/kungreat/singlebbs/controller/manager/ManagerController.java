@@ -33,6 +33,11 @@ public class ManagerController {
     public List<Report> getAllPorts(ReportQuery reportQuery) {
         return managerService.getAllPorts(reportQuery);
     }
+
+    @RequestMapping(value = "/selectByPrimaryKey",method = RequestMethod.POST)
+    public Report selectByPrimaryKey(Report record){
+        return managerService.selectByPrimaryKey(record);
+    }
     @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
     public JsonResult deleteUser(UserQuery userQuery) {
         JsonResult jsonResult = new JsonResult();
