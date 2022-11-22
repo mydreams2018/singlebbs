@@ -1,6 +1,8 @@
 package cn.kungreat.singlebbs.service;
 
+import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
+import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
 
 import java.util.List;
@@ -14,4 +16,8 @@ public interface ManagerService {
     Report selectByPrimaryKey(Report record);
 
     void updatePortAuth(Report reportQuery);
+
+    List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery);
+
+    void updateReplyPortAuth(DetailsText detailsText);
 }

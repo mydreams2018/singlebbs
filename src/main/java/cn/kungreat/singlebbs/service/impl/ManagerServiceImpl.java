@@ -69,4 +69,16 @@ public class ManagerServiceImpl implements ManagerService {
             managerMapper.updatePortAuthDetails(detailsTextQuery);
         }
     }
+    @Override
+    public List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery) {
+        return managerMapper.getAllPortsReply(detailsTextQuery);
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateReplyPortAuth(DetailsText record) {
+        Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
+        Assert.isTrue(record.getId() != null,"ID异常");
+        managerMapper.updateReplyPortAuth(record);
+    }
+
 }

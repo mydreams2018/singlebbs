@@ -24,6 +24,27 @@
         <result column="auth_describe"  property="authDescribe" />
     </resultMap>
 
+    <resultMap id="ResultDetailsMap" type="cn.kungreat.singlebbs.domain.DetailsText">
+        <id column="id" property="id" />
+        <result column="class_id" property="classId" />
+        <result column="is_adoption" property="isAdoption" />
+        <result column="like_number" property="likeNumber" />
+        <result column="port_id" property="portId" />
+        <result column="user_account" property="userAccount" />
+        <result column="create_data" property="createData" />
+        <result column="auth_flag" property="authFlag" />
+        <result column="details_text" property="detailsText" />
+        <result column="is_port" property="isPort" />
+        <result column="reply_parent" property="replyParent" />
+        <result column="like_account" property="likeAccount" />
+        <result column="alias" jdbcType="VARCHAR" property="alias" />
+        <result column="img" jdbcType="VARCHAR" property="userImg" />
+        <result column="vip_level"  property="vipLevel"/>
+        <result column="authenticate"  property="authenticate" />
+        <result column="is_manager"  property="isManager" />
+        <result column="auth_describe"  property="authDescribe" />
+    </resultMap>
+
     <update id="updatePortAuth">
         update ${tableName}
         set auth_flag = ${authFlag}
@@ -34,6 +55,12 @@
         update ${tableName}
         set auth_flag = ${authFlag}
         where port_id = #{portId} and is_port = 1
+    </update>
+
+    <update id="updateReplyPortAuth">
+        update ${tableName}
+        set auth_flag = ${authFlag}
+        where id = #{id}
     </update>
 
     <select id="selectAuthPorts" resultType="java.lang.Integer">
@@ -83,6 +110,31 @@
         ) as rt
     </select>
 
+    <select id="getAllPortsReply" resultMap="ResultDetailsMap">
+        select id, details_text, port_id,create_data, auth_describe, auth_flag, class_id
+        from (
+        (select id, details_text, port_id,create_data, auth_describe, auth_flag,
+        '1' as class_id from details_text_back
+        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        ORDER BY create_data DESC limit #{start},#{pageSize})
+        UNION ALL
+        (select id, details_text, port_id,create_data, auth_describe, auth_flag,
+        '2' as class_id from details_text_front
+        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        ORDER BY create_data DESC limit #{start},#{pageSize})
+        UNION ALL
+        (select id, details_text, port_id,create_data, auth_describe, auth_flag,
+        '3' as class_id from details_text_data
+        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        ORDER BY create_data DESC limit #{start},#{pageSize})
+        UNION ALL
+        (select id, details_text, port_id,create_data, auth_describe, auth_flag,
+        '4' as class_id from details_text_talk
+        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        ORDER BY create_data DESC limit #{start},#{pageSize})
+        ) as rt
+    </select>
+
     <sql id="PortQuery">
         <if test="name != null and name != ''">
             and port_title like concat("%",#{name},"%")
@@ -92,6 +144,18 @@
         </if>
         <if test="endTime != null and endTime !='' ">
             and create_time &lt;=  #{endTime}
+        </if>
+    </sql>
+
+    <sql id="replyPortQuery">
+        <if test="detailsText != null and detailsText != ''">
+            and details_text like concat("%",#{detailsText},"%")
+        </if>
+        <if test="beginTime != null and beginTime !='' ">
+            and create_data &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !='' ">
+            and create_data &lt;=  #{endTime}
         </if>
     </sql>
 

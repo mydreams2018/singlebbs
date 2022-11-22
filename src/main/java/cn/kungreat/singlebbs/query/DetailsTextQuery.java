@@ -19,6 +19,8 @@ public class DetailsTextQuery extends Paging{
     private String tableName;
     private Integer portIsauth;
     private String detailsText;
+    private String beginTime;
+    private String endTime;
     public String getTableName(){
         if(classId != null){
             switch (classId) {

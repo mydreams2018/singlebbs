@@ -1,6 +1,8 @@
 package cn.kungreat.singlebbs.controller.manager;
 
+import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
+import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.ManagerService;
@@ -33,11 +35,28 @@ public class ManagerController {
     public List<Report> getAllPorts(ReportQuery reportQuery) {
         return managerService.getAllPorts(reportQuery);
     }
+    @RequestMapping(value = "/getAllPortsReply", method = RequestMethod.POST)
+    public List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery) {
+        return managerService.getAllPortsReply(detailsTextQuery);
+    }
     @RequestMapping(value = "/updatePortAuth", method = RequestMethod.POST)
     public JsonResult updatePortAuth(Report reportQuery) {
         JsonResult jsonResult = new JsonResult();
         try{
             managerService.updatePortAuth(reportQuery);
+            jsonResult.setMsg("success");
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
+    }
+    @RequestMapping(value = "/updateReplyPortAuth", method = RequestMethod.POST)
+    public JsonResult updateReplyPortAuth(DetailsText detailsText) {
+        JsonResult jsonResult = new JsonResult();
+        try{
+            managerService.updateReplyPortAuth(detailsText);
             jsonResult.setMsg("success");
         }catch(Exception e){
             jsonResult.setResult(false);

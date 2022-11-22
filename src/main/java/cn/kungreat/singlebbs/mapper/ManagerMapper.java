@@ -1,5 +1,6 @@
 package cn.kungreat.singlebbs.mapper;
 
+import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
@@ -24,4 +25,8 @@ public interface ManagerMapper {
     int updatePortAuth(Report record);
 
     void updatePortAuthDetails(DetailsTextQuery record);
+
+    List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery);
+
+    void updateReplyPortAuth(DetailsText record);
 }
