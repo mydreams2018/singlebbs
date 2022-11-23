@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.AuthLogMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.AuthLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="auth_account" jdbcType="VARCHAR" property="authAccount" />
+    <result column="port_id" jdbcType="BIGINT" property="portId" />
+    <result column="port_type" jdbcType="INTEGER" property="portType" />
+    <result column="auth_date" jdbcType="BIGINT" property="authDate" />
+    <result column="auth_flag" jdbcType="INTEGER" property="authFlag" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from auth_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.AuthLog" useGeneratedKeys="true">
+    insert into auth_log (auth_account, port_id, port_type, 
+      auth_date, auth_flag, class_id
+      )
+    values (#{authAccount,jdbcType=VARCHAR}, #{portId,jdbcType=BIGINT}, #{portType,jdbcType=INTEGER}, 
+      #{authDate,jdbcType=BIGINT}, #{authFlag,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.AuthLog">
+    update auth_log
+    set auth_account = #{authAccount,jdbcType=VARCHAR},
+      port_id = #{portId,jdbcType=BIGINT},
+      port_type = #{portType,jdbcType=INTEGER},
+      auth_date = #{authDate,jdbcType=BIGINT},
+      auth_flag = #{authFlag,jdbcType=INTEGER},
+      class_id = #{classId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, auth_account, port_id, port_type, auth_date, auth_flag, class_id
+    from auth_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, auth_account, port_id, port_type, auth_date, auth_flag, class_id
+    from auth_log
+  </select>
+</mapper>

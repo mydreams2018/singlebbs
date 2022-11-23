@@ -1,7 +1,9 @@
 package cn.kungreat.singlebbs.service.impl;
 
+import cn.kungreat.singlebbs.domain.AuthLog;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
+import cn.kungreat.singlebbs.mapper.AuthLogMapper;
 import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ManagerMapper;
 import cn.kungreat.singlebbs.mapper.ReportMapper;
@@ -9,6 +11,7 @@ import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -24,6 +27,8 @@ public class ManagerServiceImpl implements ManagerService {
     private ManagerMapper managerMapper;
     @Autowired
     private ReportMapper reportMapper;
+    @Autowired
+    private AuthLogMapper authLogMapper;
     @Autowired
     private DetailsTextMapper detailsTextMapper;
 
@@ -67,6 +72,7 @@ public class ManagerServiceImpl implements ManagerService {
             detailsTextQuery.setPortId(record.getId());
             detailsTextQuery.setAuthFlag(record.getAuthFlag());
             managerMapper.updatePortAuthDetails(detailsTextQuery);
+            insertAuthLog(record);
         }
     }
     @Override
@@ -79,6 +85,29 @@ public class ManagerServiceImpl implements ManagerService {
         Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
         Assert.isTrue(record.getId() != null,"ID异常");
         managerMapper.updateReplyPortAuth(record);
+        insertAuthLog(record);
+    }
+
+    public void insertAuthLog(Report report){
+        AuthLog authLog = new AuthLog();
+        authLog.setAuthDate(System.currentTimeMillis());
+        authLog.setAuthFlag(report.getAuthFlag());
+        authLog.setClassId(report.getClassId());
+        authLog.setPortId(report.getId());
+        authLog.setPortType(1);
+        authLog.setAuthAccount(SecurityContextHolder.getContext().getAuthentication().getName());
+        authLogMapper.insert(authLog);
+    }
+
+    public void insertAuthLog(DetailsText detailsText){
+        AuthLog authLog = new AuthLog();
+        authLog.setAuthDate(System.currentTimeMillis());
+        authLog.setAuthFlag(detailsText.getAuthFlag());
+        authLog.setClassId(detailsText.getClassId());
+        authLog.setPortId(detailsText.getId());
+        authLog.setPortType(2);
+        authLog.setAuthAccount(SecurityContextHolder.getContext().getAuthentication().getName());
+        authLogMapper.insert(authLog);
     }
 
 }
