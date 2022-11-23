@@ -79,12 +79,15 @@ public class ReportServiceImpl implements ReportService {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(name.equals(port.getUserAccount()),"没有权限操作");
         record.setAuthFlag(portIsauth);
+        long currentTimeMillis = System.currentTimeMillis();
+        record.setUpdateTime(currentTimeMillis);
         reportMapper.updateByPrimaryKey(record);
         DetailsText detailsText = new DetailsText();
         detailsText.setClassId(record.getClassId());
         detailsText.setPortId(record.getId());
         detailsText.setDetailsText(record.getDetailsText());
         detailsText.setAuthFlag(portIsauth);
+        detailsText.setUpdateTime(currentTimeMillis);
         detailsTextMapper.updateByPortId(detailsText);
         return 1;
     }

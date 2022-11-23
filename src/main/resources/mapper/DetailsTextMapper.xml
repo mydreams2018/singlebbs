@@ -20,6 +20,7 @@
     <result column="authenticate"  property="authenticate" />
     <result column="is_manager"  property="isManager" />
     <result column="auth_describe"  property="authDescribe" />
+    <result column="update_time"  property="updateTime" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="cn.kungreat.singlebbs.query.DetailsTextQuery">
     delete from ${tableName}
@@ -43,7 +44,8 @@
     update ${tableName}
     set
       details_text = #{detailsText,jdbcType=LONGVARCHAR},
-      auth_flag = #{authFlag}
+      auth_flag = #{authFlag},
+      update_time = #{updateTime}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -51,7 +53,8 @@
     update ${tableName}
     set
       details_text = #{detailsText,jdbcType=LONGVARCHAR},
-      auth_flag = #{authFlag}
+      auth_flag = #{authFlag},
+      update_time = #{updateTime}
     where port_id = #{portId} and is_port=1
   </update>
 

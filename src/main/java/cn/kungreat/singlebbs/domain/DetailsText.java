@@ -24,7 +24,7 @@ public class DetailsText {
     private String likeAccount;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createData;
-
+    private Long updateTime;
     private Integer authFlag;
     private String authDescribe;
     private String detailsText;

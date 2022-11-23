@@ -29,7 +29,7 @@ public class Report {
     private Byte lookNumber;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createTime;
-
+    private Long updateTime;
     private Integer authFlag;
     private String partitionName;
     private String authDescribe;

@@ -15,6 +15,7 @@ public class DetailsTextQuery extends Paging{
     private Long portId;
     private Integer authFlag;
     private String orderType;
+    private Long updateTime;
     private Integer classId;
     private String tableName;
     private Integer portIsauth;

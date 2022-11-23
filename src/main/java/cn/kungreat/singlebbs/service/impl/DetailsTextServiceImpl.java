@@ -196,6 +196,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(name.equals(detailsText.getUserAccount()),"无权限操作此贴");
         query.setAuthFlag(portIsauth);
+        query.setUpdateTime(System.currentTimeMillis());
         detailsTextMapper.updateByPrimaryKey(query);
     }
 //用户首页最近的回贴

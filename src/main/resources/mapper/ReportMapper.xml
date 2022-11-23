@@ -40,7 +40,8 @@
   <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.Report">
     update ${tableName}
     set port_title = #{name,jdbcType=VARCHAR},
-        auth_flag = #{authFlag}
+        auth_flag = #{authFlag},
+        update_time = #{updateTime}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
