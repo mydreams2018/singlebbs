@@ -116,15 +116,4 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-    /**
-     * @param userQuery
-     * @return
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int deleteUser(UserQuery userQuery) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(manager.contains(name),"没有权限操作此接口");
-        return userMapper.deleteUser(userQuery);
-    }
 }

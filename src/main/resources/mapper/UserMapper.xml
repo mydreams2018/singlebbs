@@ -101,7 +101,13 @@
      where account = #{account} or alias = #{alias}
     </select>
 
-    <sql id="baseQuery">
+  <select id="selectByPrimaryId" resultMap="BaseResultMap">
+    select id, account, alias, img, register_year, accumulate_points, is_manager, from_city, authenticate
+    from user
+    where id = #{0}
+  </select>
+
+  <sql id="baseQuery">
     <where>
       <if test="category != null and category !='' ">
         and origin_from = #{category}

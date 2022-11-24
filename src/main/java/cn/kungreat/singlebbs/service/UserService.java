@@ -22,5 +22,4 @@ public interface UserService {
 
     QueryResult getAllUser(UserQuery userQuery);
 
-    int deleteUser(UserQuery userQuery);
 }

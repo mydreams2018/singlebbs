@@ -12,6 +12,8 @@ public interface UserMapper {
 
     User selectByPrimaryKey(String account);
 
+    User selectByPrimaryId(String id);
+
     List<User> selectAll(UserQuery query);
     int selectCount(UserQuery query);
 

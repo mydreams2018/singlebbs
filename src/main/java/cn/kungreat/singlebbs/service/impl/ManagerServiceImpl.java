@@ -3,14 +3,14 @@ package cn.kungreat.singlebbs.service.impl;
 import cn.kungreat.singlebbs.domain.AuthLog;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
-import cn.kungreat.singlebbs.mapper.AuthLogMapper;
-import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
-import cn.kungreat.singlebbs.mapper.ManagerMapper;
-import cn.kungreat.singlebbs.mapper.ReportMapper;
+import cn.kungreat.singlebbs.domain.User;
+import cn.kungreat.singlebbs.mapper.*;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
+import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,8 @@ import java.util.Map;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
-
+    @Value("#{'${user.manager}'.split(',')}")
+    private List<String> manager;
     @Autowired
     private ManagerMapper managerMapper;
     @Autowired
@@ -31,6 +32,8 @@ public class ManagerServiceImpl implements ManagerService {
     private AuthLogMapper authLogMapper;
     @Autowired
     private DetailsTextMapper detailsTextMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public List<Report> getAllPorts(ReportQuery reportQuery) {
@@ -86,6 +89,48 @@ public class ManagerServiceImpl implements ManagerService {
         Assert.isTrue(record.getId() != null,"ID异常");
         managerMapper.updateReplyPortAuth(record);
         insertAuthLog(record);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteUser(UserQuery userQuery) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Assert.isTrue(manager.contains(name),"没有权限操作此接口");
+        String[] userIds = userQuery.getIdList().split(",");
+        for (String userId : userIds) {
+            User user = userMapper.selectByPrimaryId(userId);
+            if (user != null) {
+                userQuery.setAccount(user.getAccount());
+                if (userQuery.isCurStatus()) {
+                    changePorts(userQuery, 0);
+                    changeReplyPorts(userQuery, 0);
+                } else {
+                    changePorts(userQuery, 4);
+                    changeReplyPorts(userQuery, 4);
+                }
+            }
+        }
+        return userMapper.deleteUser(userQuery);
+    }
+
+    private void changePorts(UserQuery userQuery,int authFlag){
+        Report report = new Report();
+        report.setAuthFlag(authFlag);
+        report.setUserAccount(userQuery.getAccount());
+        for (int i = 1; i < 5; i++) {
+            report.setClassId(i);
+            managerMapper.deleteUserPorts(report);
+        }
+    }
+
+    private void changeReplyPorts(UserQuery userQuery,int authFlag){
+        DetailsText detailsText = new DetailsText();
+        detailsText.setUserAccount(userQuery.getAccount());
+        detailsText.setAuthFlag(authFlag);
+        for (int i = 1; i < 5; i++) {
+            detailsText.setClassId(i);
+            managerMapper.deleteUserReplyPorts(detailsText);
+        }
     }
 
     public void insertAuthLog(Report report){

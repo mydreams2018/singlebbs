@@ -63,6 +63,14 @@
         where id = #{id}
     </update>
 
+    <delete id="deleteUserPorts">
+       update ${tableName} set auth_flag = #{authFlag} where user_account = #{userAccount}
+    </delete>
+
+    <delete id="deleteUserReplyPorts">
+        update ${tableName} set auth_flag = #{authFlag} where user_account = #{userAccount}
+    </delete>
+
     <select id="selectAuthPorts" resultType="java.lang.Integer">
     select sum(num) from
     (select count(id) as num from report_back where auth_flag=0

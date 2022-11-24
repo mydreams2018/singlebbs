@@ -4,6 +4,7 @@ import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
+import cn.kungreat.singlebbs.query.UserQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,5 @@ public interface ManagerService {
     List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery);
 
     void updateReplyPortAuth(DetailsText detailsText);
+    int deleteUser(UserQuery userQuery);
 }

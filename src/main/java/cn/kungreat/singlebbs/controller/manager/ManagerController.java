@@ -74,7 +74,7 @@ public class ManagerController {
     public JsonResult deleteUser(UserQuery userQuery) {
         JsonResult jsonResult = new JsonResult();
         try{
-            userService.deleteUser(userQuery);
+            managerService.deleteUser(userQuery);
             jsonResult.setMsg("success");
         }catch(Exception e){
             jsonResult.setResult(false);
