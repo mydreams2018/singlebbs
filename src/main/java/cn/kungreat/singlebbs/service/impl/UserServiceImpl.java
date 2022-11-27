@@ -104,6 +104,7 @@ public class UserServiceImpl implements UserService {
     public QueryResult getAllUser(UserQuery userQuery) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(manager.contains(name),"没有权限查询此接口");
+        userQuery.setOriginalManager(manager);
         int num = userMapper.selectCount(userQuery);
         List list  = Collections.emptyList();
         if(num > 0){

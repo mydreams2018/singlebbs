@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 public class UserQuery extends Paging {
     private String category;
+    private List<String> originalManager;
     private String alias;
     @JsonIgnore
     private String account;

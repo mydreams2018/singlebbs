@@ -109,6 +109,12 @@
 
   <sql id="baseQuery">
     <where>
+      <if test="originalManager != null">
+        and account NOT IN
+        <foreach collection="originalManager"  item="as" separator="," close=")"  open="(">
+          #{as}
+        </foreach>
+      </if>
       <if test="category != null and category !='' ">
         and origin_from = #{category}
       </if>
