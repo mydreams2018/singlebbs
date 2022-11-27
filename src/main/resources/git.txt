@@ -9,3 +9,16 @@ git remote prune origin
 git config --global fetch.prune true
 
 类.<>静态方法() 指定泛型
+
+found: {
+            if (o == null) {
+                for (; i < size; i++)
+                    if (es[i] == null)
+                        break found;
+            } else {
+                for (; i < size; i++)
+                    if (o.equals(es[i]))
+                        break found;
+            }
+            return false;
+        }

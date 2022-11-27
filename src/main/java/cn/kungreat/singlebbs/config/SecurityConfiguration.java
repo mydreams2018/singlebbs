@@ -73,6 +73,7 @@ public class SecurityConfiguration {
                 .addFilterBefore(new ImageFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new TokenManagerFilter(userDetailsService), SessionManagementFilter.class)
                 .addFilterAfter(new AuthManagerFilter(), SwitchUserFilter.class)
+                .addFilterAfter(new InvalidUserFilter(), AuthManagerFilter.class)
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
                 .formLogin().loginPage("/index").loginProcessingUrl("/defaultLogin").permitAll()

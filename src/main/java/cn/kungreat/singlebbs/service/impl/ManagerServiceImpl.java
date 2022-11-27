@@ -9,6 +9,7 @@ import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.ManagerService;
+import cn.kungreat.singlebbs.util.InvalidUserCacle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -100,13 +101,16 @@ public class ManagerServiceImpl implements ManagerService {
         for (String userId : userIds) {
             User user = userMapper.selectByPrimaryId(userId);
             if (user != null) {
-                userQuery.setAccount(user.getAccount());
+                String userAccount = user.getAccount();
+                userQuery.setAccount(userAccount);
                 if (userQuery.isCurStatus()) {
                     changePorts(userQuery, 0);
                     changeReplyPorts(userQuery, 0);
+                    InvalidUserCacle.removeUserInvalid(userAccount);
                 } else {
                     changePorts(userQuery, 4);
                     changeReplyPorts(userQuery, 4);
+                    InvalidUserCacle.addUserInvalid(userAccount);
                 }
             }
         }

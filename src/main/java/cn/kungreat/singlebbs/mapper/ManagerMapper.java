@@ -4,7 +4,6 @@ import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
-import cn.kungreat.singlebbs.query.UserQuery;
 
 import java.util.List;
 
@@ -34,4 +33,6 @@ public interface ManagerMapper {
     int deleteUserPorts(Report report);
 
     void deleteUserReplyPorts(DetailsText detailsText);
+
+    List<String> selectInvalidUsers();
 }

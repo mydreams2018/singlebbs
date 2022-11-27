@@ -143,6 +143,10 @@
         ) as rt
     </select>
 
+    <select id="selectInvalidUsers" resultType="java.lang.String">
+        select account from user where state = 0
+    </select>
+
     <sql id="PortQuery">
         <if test="name != null and name != ''">
             and port_title like concat("%",#{name},"%")
