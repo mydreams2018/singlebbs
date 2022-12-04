@@ -38,6 +38,11 @@
       base_order = #{baseOrder}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateCollaborationCompany">
+    update collaboration_company
+    set is_active = 0
+    where end_time &lt;= now()
+  </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select id, only_status, company_images, 'describe', avtive_time, end_time, is_active,
     business_people, link_url, base_order

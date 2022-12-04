@@ -16,4 +16,6 @@ public interface CollaborationCompanyMapper {
     int selectCount(CollaborationCompanyQuery record);
 
     int updateByPrimaryKey(CollaborationCompany record);
+
+    int updateCollaborationCompany();
 }
