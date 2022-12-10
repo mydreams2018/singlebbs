@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="only_status" jdbcType="INTEGER" property="onlyStatus" />
     <result column="company_images" jdbcType="VARCHAR" property="companyImages" />
-    <result column="describe" jdbcType="VARCHAR" property="describe" />
+    <result column="description" jdbcType="VARCHAR" property="describe" />
     <result column="avtive_time" jdbcType="TIMESTAMP" property="avtiveTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="is_active" jdbcType="BIT" property="isActive" />
@@ -19,7 +19,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.CollaborationCompany" useGeneratedKeys="true">
-    insert into collaboration_company (only_status, company_images, 'describe',
+    insert into collaboration_company (only_status, company_images, description,
       avtive_time, end_time, is_active, 
       business_people,link_url,base_order)
     values (#{onlyStatus,jdbcType=INTEGER}, #{companyImages,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
@@ -30,7 +30,7 @@
     update collaboration_company
     set only_status = #{onlyStatus,jdbcType=INTEGER},
       company_images = #{companyImages,jdbcType=VARCHAR},
-      'describe' = #{describe,jdbcType=VARCHAR},
+      description = #{describe,jdbcType=VARCHAR},
       avtive_time = #{avtiveTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       is_active = #{isActive,jdbcType=BIT},
@@ -44,14 +44,14 @@
     where end_time &lt;= now()
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, only_status, company_images, 'describe', avtive_time, end_time, is_active,
+    select id, only_status, company_images, description, avtive_time, end_time, is_active,
     business_people, link_url, base_order
     from collaboration_company
     where id = #{id,jdbcType=INTEGER}
   </select>
 
   <select id="selectAll" parameterType="cn.kungreat.singlebbs.query.CollaborationCompanyQuery" resultMap="BaseResultMap">
-    select id, only_status, company_images, 'describe', avtive_time, end_time, is_active,
+    select id, only_status, company_images, description, avtive_time, end_time, is_active,
     business_people ,link_url, base_order
     from collaboration_company
     <include refid="baseQuery"/>
