@@ -75,6 +75,9 @@
       <if test="businessPeople != null and businessPeople !='' ">
         and business_people like concat("%",#{businessPeople},"%")
       </if>
+      <if test="describe != null and describe !='' ">
+        and description like concat("%",#{describe},"%")
+      </if>
       <if test="beginTime != null and beginTime !='' ">
         and end_time &gt;= #{endTime}
       </if>

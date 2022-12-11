@@ -8,6 +8,7 @@ import lombok.Setter;
 public class CollaborationCompanyQuery extends Paging{
     private Boolean isActive;
     private String businessPeople;
+    private String describe;
     private Integer onlyStatus;
     private String beginTime;
     private String endTime;
