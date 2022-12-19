@@ -106,7 +106,8 @@ public class ManagerController {
             Assert.isTrue(manager.contains(account),"没有权限操作此接口");
             Assert.isTrue("image/jpeg".equals(file.getContentType())
                     ||"image/gif".equals(file.getContentType())
-                    || "image/jpg".equals(file.getContentType()),"只支持jpg或gif格式的图片");
+                    || "image/jpg".equals(file.getContentType())
+                    || "image/png".equals(file.getContentType()) ,"只支持jpg,png,gif格式的图片");
             String type = file.getContentType().split("/")[1];
             String name = RandomStringUtils.randomAlphabetic(8);
             String rans = name +"."+type;

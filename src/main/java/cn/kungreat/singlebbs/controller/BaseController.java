@@ -81,7 +81,7 @@ public class BaseController {
                     ||"image/gif".equals(file.getContentType())
                     || "image/jpg".equals(file.getContentType())
                     || "image/png".equals(file.getContentType()),
-                    "只支持jpg或gif格式的图片");
+                    "只支持jpg,png,gif格式的图片");
             String type = file.getContentType().split("/")[1];
             String rans = RandomStringUtils.randomAlphabetic(8)+"."+type;
             String img = path +"userImg/"+rans;
