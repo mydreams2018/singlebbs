@@ -1,13 +1,11 @@
 package cn.kungreat.singlebbs.service.impl;
 
-import cn.kungreat.singlebbs.domain.AuthLog;
-import cn.kungreat.singlebbs.domain.DetailsText;
-import cn.kungreat.singlebbs.domain.Report;
-import cn.kungreat.singlebbs.domain.User;
+import cn.kungreat.singlebbs.domain.*;
 import cn.kungreat.singlebbs.mapper.*;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
+import cn.kungreat.singlebbs.service.CollaborationCompanyService;
 import cn.kungreat.singlebbs.service.ManagerService;
 import cn.kungreat.singlebbs.util.InvalidUserCacle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,8 @@ public class ManagerServiceImpl implements ManagerService {
     private DetailsTextMapper detailsTextMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CollaborationCompanyService collaborationCompanyService;
 
     @Override
     public List<Report> getAllPorts(ReportQuery reportQuery) {
@@ -115,6 +115,13 @@ public class ManagerServiceImpl implements ManagerService {
             }
         }
         return userMapper.deleteUser(userQuery);
+    }
+
+    @Override
+    public void collaborationInsert(CollaborationCompany collaborationCompany) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Assert.isTrue(manager.contains(name),"没有权限操作此接口");
+        collaborationCompanyService.insert(collaborationCompany);
     }
 
     private void changePorts(UserQuery userQuery,int authFlag){

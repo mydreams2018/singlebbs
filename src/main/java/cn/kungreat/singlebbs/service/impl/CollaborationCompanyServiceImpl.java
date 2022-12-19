@@ -5,7 +5,9 @@ import cn.kungreat.singlebbs.mapper.CollaborationCompanyMapper;
 import cn.kungreat.singlebbs.query.CollaborationCompanyQuery;
 import cn.kungreat.singlebbs.service.CollaborationCompanyService;
 import cn.kungreat.singlebbs.vo.QueryResult;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,8 @@ public class CollaborationCompanyServiceImpl implements CollaborationCompanyServ
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int insert(CollaborationCompany record) {
+        record.setBusinessPeople(SecurityContextHolder.getContext().getAuthentication().getName());
+        record.setBaseOrder(Integer.parseInt(DateFormatUtils.format(System.currentTimeMillis(),"yyyyMMdd")));
         return collaborationCompanyMapper.insert(record);
     }
 

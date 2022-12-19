@@ -1,5 +1,6 @@
 package cn.kungreat.singlebbs.service;
 
+import cn.kungreat.singlebbs.domain.CollaborationCompany;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
@@ -22,4 +23,6 @@ public interface ManagerService {
 
     void updateReplyPortAuth(DetailsText detailsText);
     int deleteUser(UserQuery userQuery);
+
+    void collaborationInsert(CollaborationCompany collaborationCompany);
 }

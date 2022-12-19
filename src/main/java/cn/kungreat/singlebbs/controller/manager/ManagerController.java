@@ -1,5 +1,6 @@
 package cn.kungreat.singlebbs.controller.manager;
 
+import cn.kungreat.singlebbs.domain.CollaborationCompany;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
@@ -85,6 +86,20 @@ public class ManagerController {
         JsonResult jsonResult = new JsonResult();
         try{
             managerService.deleteUser(userQuery);
+            jsonResult.setMsg("success");
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
+    }
+
+    @RequestMapping(value = "/collaborationInsert", method = RequestMethod.POST)
+    public JsonResult collaborationInsert(CollaborationCompany collaborationCompany) {
+        JsonResult jsonResult = new JsonResult();
+        try{
+            managerService.collaborationInsert(collaborationCompany);
             jsonResult.setMsg("success");
         }catch(Exception e){
             jsonResult.setResult(false);
