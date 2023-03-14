@@ -21,11 +21,11 @@
     <result column="authenticate"  property="authenticate" />
   </resultMap>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.User" useGeneratedKeys="true">
-    insert into user (account, password, alias, img, state, register_time, vip_level,register_year,accumulate_points,is_manager,origin_from,description)
+    insert into user (account, password, alias, img, state, register_time, vip_level,register_year,accumulate_points,is_manager,origin_from,description,authenticate)
     values (#{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, 
       #{img,jdbcType=VARCHAR}, 1,
       #{registerTime}, 0,
-            #{registerYear}, 0, 0, #{originFrom},#{description})
+            #{registerYear}, 0, 0, #{originFrom},#{description},#{authenticate})
   </insert>
   <update id="updateByPrimaryKey" parameterType="cn.kungreat.singlebbs.domain.User">
     update user

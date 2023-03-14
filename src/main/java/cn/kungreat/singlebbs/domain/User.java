@@ -31,7 +31,7 @@ public class User{
     private Integer accumulatePoints=0;
     private Byte isManager=0;
     private String fromCity;
-    private String authenticate;
+    private String authenticate="普通用户";
     private String rePass;
 
     public String validMessage(){
