@@ -4,7 +4,7 @@ create table user
         primary key,
     account           varchar(12) collate utf8mb4_bin  not null comment '用户',
     password          varchar(60) collate utf8mb4_bin  null,
-    alias             varchar(6) collate utf8mb4_bin   not null comment '别名',
+    alias             varchar(12) collate utf8mb4_bin   not null comment '别名',
     phone             bigint                           null comment '电话',
     img               varchar(188) collate utf8mb4_bin null comment '图片',
     state             tinyint                          null,
