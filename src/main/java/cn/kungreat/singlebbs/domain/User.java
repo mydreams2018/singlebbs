@@ -21,7 +21,7 @@ public class User{
     private String img="/api/userImg/default.jpg";
     private Byte state;
     private String email;
-    private String description;
+    private String description="此人很懒,没有描述信息";
     private String originFrom="default";
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date registerTime;
@@ -86,6 +86,6 @@ public class User{
     }
 
     public String getAlias(){
-        return alias!=null?alias.trim(): null;
+        return alias!=null?alias.trim(): "";
     }
 }
