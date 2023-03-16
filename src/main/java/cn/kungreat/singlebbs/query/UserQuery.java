@@ -12,6 +12,8 @@ public class UserQuery extends Paging {
     private String category;
     private List<String> originalManager;
     private String alias;
+    private String state;
+    private Byte isManager;
     @JsonIgnore
     private String account;
     private Integer classId;

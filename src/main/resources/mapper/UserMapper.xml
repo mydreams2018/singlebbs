@@ -57,7 +57,14 @@
       where account = #{account}
   </update>
 
-    <delete id="deleteUser">
+  <update id="updateUserIsManager">
+    update user
+    set is_manager = #{isManager},
+        authenticate = #{authenticate}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteUser">
       update user
       set state = ${curStatus}
       where id in (${idList})
@@ -117,6 +124,12 @@
       </if>
       <if test="category != null and category !='' ">
         and origin_from = #{category}
+      </if>
+      <if test="state != null and state !='' ">
+        and state = #{state}
+      </if>
+      <if test="isManager != null">
+        and is_manager = #{isManager}
       </if>
       <if test="alias != null and alias !='' ">
         and alias like concat("%",#{alias},"%")

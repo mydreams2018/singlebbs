@@ -3,6 +3,7 @@ package cn.kungreat.singlebbs.controller.manager;
 import cn.kungreat.singlebbs.domain.CollaborationCompany;
 import cn.kungreat.singlebbs.domain.DetailsText;
 import cn.kungreat.singlebbs.domain.Report;
+import cn.kungreat.singlebbs.domain.User;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
@@ -42,6 +43,21 @@ public class ManagerController {
         userQuery.setClassId(1);//返回json格式代时需要
         return userService.getAllUser(userQuery);
     }
+
+    @RequestMapping(value = "/updateUserIsManager", method = RequestMethod.POST)
+    public JsonResult updateUserIsManager(User user) {
+        JsonResult jsonResult = new JsonResult();
+        try{
+            userService.updateUserIsManager(user);
+            jsonResult.setMsg("修改管理员成功");
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
+    }
+
     @RequestMapping(value = "/getAllPorts", method = RequestMethod.POST)
     public List<Report> getAllPorts(ReportQuery reportQuery) {
         return managerService.getAllPorts(reportQuery);

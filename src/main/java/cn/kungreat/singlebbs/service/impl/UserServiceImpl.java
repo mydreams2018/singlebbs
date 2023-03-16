@@ -117,4 +117,13 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserIsManager(User user) {
+        Assert.isTrue(user.getId() != null,"ID入参为空");
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Assert.isTrue(manager.contains(name),"没有权限查询此接口");
+        user.setAuthenticate(user.getIsManager()==1?"管理员":"普通用户");
+        userMapper.updateUserIsManager(user);
+    }
+
 }

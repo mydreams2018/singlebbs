@@ -22,4 +22,5 @@ public interface UserService {
 
     QueryResult getAllUser(UserQuery userQuery);
 
+    void updateUserIsManager(User user);
 }
