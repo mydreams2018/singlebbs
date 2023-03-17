@@ -123,6 +123,14 @@ public class ManagerServiceImpl implements ManagerService {
         collaborationCompanyService.insert(collaborationCompany);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePortIsTop(Report reportQuery) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Assert.isTrue(manager.contains(name), "没有权限操作此接口");
+        managerMapper.updatePortIsTop(reportQuery);
+    }
+
     private void changePorts(UserQuery userQuery, int authFlag) {
         Report report = new Report();
         report.setAuthFlag(authFlag);

@@ -63,6 +63,12 @@
         where id = #{id}
     </update>
 
+    <update id="updatePortIsTop">
+        update ${tableName}
+        set is_top = ${isTop}
+        where id = #{id}
+    </update>
+
     <delete id="deleteUserPorts">
        update ${tableName} set auth_flag = #{authFlag} where user_account = #{userAccount}
     </delete>

@@ -35,4 +35,6 @@ public interface ManagerMapper {
     void deleteUserReplyPorts(DetailsText detailsText);
 
     List<String> selectInvalidUsers();
+
+    void updatePortIsTop(Report reportQuery);
 }

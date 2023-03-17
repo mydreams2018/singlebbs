@@ -79,6 +79,21 @@ public class ManagerController {
         }
         return jsonResult;
     }
+
+    @RequestMapping(value = "/updatePortIsTop", method = RequestMethod.POST)
+    public JsonResult updatePortIsTop(Report reportQuery) {
+        JsonResult jsonResult = new JsonResult();
+        try{
+            managerService.updatePortIsTop(reportQuery);
+            jsonResult.setMsg("success");
+        }catch(Exception e){
+            jsonResult.setResult(false);
+            jsonResult.setStatus(0);
+            jsonResult.setMsg(e.getMessage());
+        }
+        return jsonResult;
+    }
+
     @RequestMapping(value = "/updateReplyPortAuth", method = RequestMethod.POST)
     public JsonResult updateReplyPortAuth(DetailsText detailsText) {
         JsonResult jsonResult = new JsonResult();

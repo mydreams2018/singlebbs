@@ -25,4 +25,6 @@ public interface ManagerService {
     int updateUserState(UserQuery userQuery);
 
     void collaborationInsert(CollaborationCompany collaborationCompany);
+
+    void updatePortIsTop(Report reportQuery);
 }
