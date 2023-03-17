@@ -96,7 +96,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int deleteUser(UserQuery userQuery) {
+    public int updateUserState(UserQuery userQuery) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Assert.isTrue(manager.contains(name), "没有权限操作此接口");
         String userId = userQuery.getId();
@@ -113,7 +113,7 @@ public class ManagerServiceImpl implements ManagerService {
             changeReplyPorts(userQuery, 4);
             InvalidUserCacle.addUserInvalid(userAccount);
         }
-        return userMapper.deleteUser(userQuery);
+        return userMapper.updateUserState(userQuery);
     }
 
     @Override

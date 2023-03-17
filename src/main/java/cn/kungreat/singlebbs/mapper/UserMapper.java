@@ -29,7 +29,7 @@ public interface UserMapper {
 
     int repass(@Param("account") String account, @Param("repass") String repass);
 
-    int deleteUser(UserQuery userQuery);
+    int updateUserState(UserQuery userQuery);
 
     void updateUserIsManager(User user);
 }

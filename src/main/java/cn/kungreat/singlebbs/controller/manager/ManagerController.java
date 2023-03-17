@@ -97,11 +97,11 @@ public class ManagerController {
     public Report selectByPrimaryKey(Report record){
         return managerService.selectByPrimaryKey(record);
     }
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
-    public JsonResult deleteUser(UserQuery userQuery) {
+    @RequestMapping(value = "/updateUserState", method = RequestMethod.POST)
+    public JsonResult updateUserState(UserQuery userQuery) {
         JsonResult jsonResult = new JsonResult();
         try{
-            managerService.deleteUser(userQuery);
+            managerService.updateUserState(userQuery);
             jsonResult.setMsg("success");
         }catch(Exception e){
             jsonResult.setResult(false);

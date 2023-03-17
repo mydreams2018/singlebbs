@@ -22,7 +22,7 @@ public interface ManagerService {
     List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery);
 
     void updateReplyPortAuth(DetailsText detailsText);
-    int deleteUser(UserQuery userQuery);
+    int updateUserState(UserQuery userQuery);
 
     void collaborationInsert(CollaborationCompany collaborationCompany);
 }

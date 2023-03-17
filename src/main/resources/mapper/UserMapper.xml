@@ -64,7 +64,7 @@
     where id = #{id}
   </update>
 
-  <delete id="deleteUser">
+  <delete id="updateUserState">
       update user
       set state = ${curStatus}
       where id = #{id}
