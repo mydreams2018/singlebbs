@@ -9,7 +9,6 @@ import cn.kungreat.singlebbs.service.CollaborationCompanyService;
 import cn.kungreat.singlebbs.service.ManagerService;
 import cn.kungreat.singlebbs.util.InvalidUserCacle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +20,6 @@ import java.util.Map;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
-    @Value("#{'${user.manager}'.split(',')}")
-    private List<String> manager;
     @Autowired
     private ManagerMapper managerMapper;
     @Autowired
@@ -97,8 +94,6 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateUserState(UserQuery userQuery) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(manager.contains(name), "没有权限操作此接口");
         String userId = userQuery.getId();
         User user = userMapper.selectByPrimaryId(userId);
         Assert.isTrue(user != null, "此用户不存在");
@@ -117,17 +112,14 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void collaborationInsert(CollaborationCompany collaborationCompany) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(manager.contains(name), "没有权限操作此接口");
         collaborationCompanyService.insert(collaborationCompany);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePortIsTop(Report reportQuery) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(manager.contains(name), "没有权限操作此接口");
         managerMapper.updatePortIsTop(reportQuery);
     }
 

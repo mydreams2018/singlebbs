@@ -13,9 +13,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class AuthManagerFilter extends OncePerRequestFilter {
 
+    private static final List<String> manager = List.of("deathwater","kungreat");
+
+    private static final List<String> rootManagerPath = List.of("/api/manager/getAllUser","/api/manager/updateUserIsManager"
+                                ,"/api/manager/updatePortIsTop","/api/manager/updateUserState","/api/manager/collaborationInsert"
+                                ,"/api/manager/uploadImg");
     /*
     * TokenManagerFilter 之后
     */
@@ -36,6 +42,12 @@ public class AuthManagerFilter extends OncePerRequestFilter {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write(SinglebbsApplication.MAP_JSON.writeValueAsString(new JsonResult(false, "不是管理员,没权审核", null, 0, "imgCode")));
+                return;
+            }
+            if(rootManagerPath.contains(requestURI) && !manager.contains(authentication.getName())){
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write(SinglebbsApplication.MAP_JSON.writeValueAsString(new JsonResult(false, "不是超级管理员,没权操作", null, 0, "imgCode")));
                 return;
             }
         }
