@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 @Getter
 public class UserQuery extends Paging {
+    private String id;
     private String category;
     private List<String> originalManager;
     private String alias;

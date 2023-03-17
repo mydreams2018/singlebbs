@@ -67,7 +67,7 @@
   <delete id="deleteUser">
       update user
       set state = ${curStatus}
-      where id in (${idList})
+      where id = #{id}
     </delete>
 
     <select id="selectByPrimaryKey"  resultMap="BaseResultMap">

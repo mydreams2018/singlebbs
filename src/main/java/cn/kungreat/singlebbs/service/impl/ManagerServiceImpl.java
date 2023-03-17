@@ -52,10 +52,10 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public Report selectByPrimaryKey(Report record) {
-        Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
-        Assert.isTrue(record.getId() != null,"ID异常");
+        Assert.isTrue(record.getClassId() != null && record.getClassId() >= 1 && record.getClassId() < 5, "类型ID异常");
+        Assert.isTrue(record.getId() != null, "ID异常");
         Report report = reportMapper.selectByPrimaryKey(record);
-        if(report != null){
+        if (report != null) {
             DetailsText de = new DetailsText();
             de.setPortId(record.getId());
             de.setClassId(record.getClassId());
@@ -68,9 +68,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePortAuth(Report record) {
-        Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
-        Assert.isTrue(record.getId() != null,"ID异常");
-        if(managerMapper.updatePortAuth(record) > 0){
+        Assert.isTrue(record.getClassId() != null && record.getClassId() >= 1 && record.getClassId() < 5, "类型ID异常");
+        Assert.isTrue(record.getId() != null, "ID异常");
+        if (managerMapper.updatePortAuth(record) > 0) {
             DetailsTextQuery detailsTextQuery = new DetailsTextQuery();
             detailsTextQuery.setClassId(record.getClassId());
             detailsTextQuery.setPortId(record.getId());
@@ -79,15 +79,17 @@ public class ManagerServiceImpl implements ManagerService {
             insertAuthLog(record);
         }
     }
+
     @Override
     public List<DetailsText> getAllPortsReply(DetailsTextQuery detailsTextQuery) {
         return managerMapper.getAllPortsReply(detailsTextQuery);
     }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateReplyPortAuth(DetailsText record) {
-        Assert.isTrue(record.getClassId()!=null&&record.getClassId()>=1&&record.getClassId()<5,"类型ID异常");
-        Assert.isTrue(record.getId() != null,"ID异常");
+        Assert.isTrue(record.getClassId() != null && record.getClassId() >= 1 && record.getClassId() < 5, "类型ID异常");
+        Assert.isTrue(record.getId() != null, "ID异常");
         managerMapper.updateReplyPortAuth(record);
         insertAuthLog(record);
     }
@@ -96,23 +98,20 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteUser(UserQuery userQuery) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(manager.contains(name),"没有权限操作此接口");
-        String[] userIds = userQuery.getIdList().split(",");
-        for (String userId : userIds) {
-            User user = userMapper.selectByPrimaryId(userId);
-            if (user != null) {
-                String userAccount = user.getAccount();
-                userQuery.setAccount(userAccount);
-                if (userQuery.isCurStatus()) {
-                    changePorts(userQuery, 0);
-                    changeReplyPorts(userQuery, 0);
-                    InvalidUserCacle.removeUserInvalid(userAccount);
-                } else {
-                    changePorts(userQuery, 4);
-                    changeReplyPorts(userQuery, 4);
-                    InvalidUserCacle.addUserInvalid(userAccount);
-                }
-            }
+        Assert.isTrue(manager.contains(name), "没有权限操作此接口");
+        String userId = userQuery.getId();
+        User user = userMapper.selectByPrimaryId(userId);
+        Assert.isTrue(user != null, "此用户不存在");
+        String userAccount = user.getAccount();
+        userQuery.setAccount(userAccount);
+        if (userQuery.isCurStatus()) {
+            changePorts(userQuery, 0);
+            changeReplyPorts(userQuery, 0);
+            InvalidUserCacle.removeUserInvalid(userAccount);
+        } else {
+            changePorts(userQuery, 4);
+            changeReplyPorts(userQuery, 4);
+            InvalidUserCacle.addUserInvalid(userAccount);
         }
         return userMapper.deleteUser(userQuery);
     }
@@ -120,11 +119,11 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public void collaborationInsert(CollaborationCompany collaborationCompany) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(manager.contains(name),"没有权限操作此接口");
+        Assert.isTrue(manager.contains(name), "没有权限操作此接口");
         collaborationCompanyService.insert(collaborationCompany);
     }
 
-    private void changePorts(UserQuery userQuery,int authFlag){
+    private void changePorts(UserQuery userQuery, int authFlag) {
         Report report = new Report();
         report.setAuthFlag(authFlag);
         report.setUserAccount(userQuery.getAccount());
@@ -134,7 +133,7 @@ public class ManagerServiceImpl implements ManagerService {
         }
     }
 
-    private void changeReplyPorts(UserQuery userQuery,int authFlag){
+    private void changeReplyPorts(UserQuery userQuery, int authFlag) {
         DetailsText detailsText = new DetailsText();
         detailsText.setUserAccount(userQuery.getAccount());
         detailsText.setAuthFlag(authFlag);
@@ -144,7 +143,7 @@ public class ManagerServiceImpl implements ManagerService {
         }
     }
 
-    public void insertAuthLog(Report report){
+    public void insertAuthLog(Report report) {
         AuthLog authLog = new AuthLog();
         authLog.setAuthDate(System.currentTimeMillis());
         authLog.setAuthFlag(report.getAuthFlag());
@@ -155,7 +154,7 @@ public class ManagerServiceImpl implements ManagerService {
         authLogMapper.insert(authLog);
     }
 
-    public void insertAuthLog(DetailsText detailsText){
+    public void insertAuthLog(DetailsText detailsText) {
         AuthLog authLog = new AuthLog();
         authLog.setAuthDate(System.currentTimeMillis());
         authLog.setAuthFlag(detailsText.getAuthFlag());
