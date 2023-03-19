@@ -3,12 +3,12 @@ package cn.kungreat.singlebbs.service.impl;
 import cn.kungreat.singlebbs.domain.User;
 import cn.kungreat.singlebbs.mapper.UserMapper;
 import cn.kungreat.singlebbs.query.UserQuery;
+import cn.kungreat.singlebbs.security.AuthManagerFilter;
 import cn.kungreat.singlebbs.service.UserService;
 import cn.kungreat.singlebbs.util.UserAccumulate;
 import cn.kungreat.singlebbs.vo.QueryResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,15 +21,13 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
-    @Value("#{'${user.manager}'.split(',')}")
-    private List<String> manager;
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
     @Transactional(rollbackFor = Exception.class)
     public int insert(User record) {
         String s = record.validMessage();
         Assert.isTrue(StringUtils.isEmpty(s),s);
-        Assert.isTrue(!manager.contains(record.getAccount()),"此用户不能注册");
+        Assert.isTrue(!AuthManagerFilter.MANAGER.contains(record.getAccount()),"此用户不能注册");
         Assert.isTrue(userMapper.selectByunique(record.getAccount(),record.getAlias())==null,"用户或别名已经存在");
         record.setRegisterTime(new Date());
         Calendar c = Calendar.getInstance();
@@ -102,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public QueryResult getAllUser(UserQuery userQuery) {
-        userQuery.setOriginalManager(manager);
+        userQuery.setOriginalManager(AuthManagerFilter.MANAGER);
         int num = userMapper.selectCount(userQuery);
         List list  = Collections.emptyList();
         if(num > 0){

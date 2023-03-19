@@ -17,7 +17,8 @@ import java.util.List;
 
 public class AuthManagerFilter extends OncePerRequestFilter {
 
-    private static final List<String> MANAGER = List.of("deathwater","kungreat");
+/*  MANAGER 超级管理员  */
+    public static final List<String> MANAGER = List.of("deathwater","kungreat");
 
     private static final List<String> ROOT_MANAGER_PATH = List.of("/api/manager/getAllUser","/api/manager/updateUserIsManager"
                                 ,"/api/manager/updatePortIsTop","/api/manager/updateUserState","/api/manager/collaborationInsert"
