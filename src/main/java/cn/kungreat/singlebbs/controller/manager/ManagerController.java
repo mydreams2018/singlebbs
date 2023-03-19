@@ -128,7 +128,7 @@ public class ManagerController {
         JsonResult jsonResult = new JsonResult();
         try{
             managerService.collaborationInsert(collaborationCompany);
-            jsonResult.setMsg("success");
+            jsonResult.setMsg("新增合作成功");
         }catch(Exception e){
             jsonResult.setResult(false);
             jsonResult.setStatus(0);

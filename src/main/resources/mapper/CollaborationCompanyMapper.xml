@@ -13,11 +13,7 @@
     <result column="link_url" jdbcType="VARCHAR" property="linkUrl" />
     <result column="base_order" jdbcType="INTEGER" property="baseOrder" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    update collaboration_company
-    set is_active = 0
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.CollaborationCompany" useGeneratedKeys="true">
     insert into collaboration_company (only_status, company_images, description,
       avtive_time, end_time, is_active, 
@@ -43,12 +39,12 @@
     set is_active = 0
     where end_time &lt;= now()
   </update>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select id, only_status, company_images, description, avtive_time, end_time, is_active,
-    business_people, link_url, base_order
-    from collaboration_company
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+
+  <update id="updateCollaborationCompanyActive">
+    update collaboration_company
+    set is_active = 1
+    where now() &gt;= avtive_time and end_time &gt;= now()
+  </update>
 
   <select id="selectAll" parameterType="cn.kungreat.singlebbs.query.CollaborationCompanyQuery" resultMap="BaseResultMap">
     select id, only_status, company_images, description, avtive_time, end_time, is_active,

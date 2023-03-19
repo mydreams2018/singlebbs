@@ -13,5 +13,6 @@ public class SchedulingUtils {
     @Scheduled(cron = "0 0 1 * * *")
     public void changeCollaborationCompany(){
         collaborationCompanyMapper.updateCollaborationCompany();
+        collaborationCompanyMapper.updateCollaborationCompanyActive();
     }
 }
