@@ -20,7 +20,6 @@ public class User{
     private Long phone;
     private String img="/api/userImg/default.jpg";
     private Byte state;
-    @JsonIgnore
     private String email;
     private String description="此人很懒,没有描述信息";
     private String originFrom="default";
