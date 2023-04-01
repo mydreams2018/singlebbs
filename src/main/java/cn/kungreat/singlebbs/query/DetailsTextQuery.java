@@ -35,6 +35,9 @@ public class DetailsTextQuery extends Paging{
     }
 
     public String getOrderType() {
-        return OrderFiled.ORDER_VALUES.contains(orderType)?orderType:null;
+        if(orderType != null){
+            return OrderFiled.ORDER_VALUES.contains(orderType)?orderType:null;
+        }
+        return null;
     }
 }
