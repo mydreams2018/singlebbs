@@ -6,10 +6,6 @@
     <result column="permission_methods" property="permissionMethods" />
     <result column="descript" property="descript" />
   </resultMap>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.Permission" useGeneratedKeys="true">
-    insert into permission (permission_methods, descript)
-    values (#{permissionMethods,jdbcType=VARCHAR}, #{descript,jdbcType=VARCHAR})
-  </insert>
 
   <insert id="insertBatch">
     insert into  permission (permission_methods, descript) values
@@ -17,9 +13,7 @@
       (#{var.permissionMethods},#{var.descript})
     </foreach>
   </insert>
-  <delete id="deleteAll">
-    delete from permission
-  </delete>
+
 <!--  修改一个表的时候子查询不能是这被修改的这个表,所以解决办法是在子查询外面再套一层查询语句就可以了 -->
   <delete id="deleteRepeat">
     delete from permission

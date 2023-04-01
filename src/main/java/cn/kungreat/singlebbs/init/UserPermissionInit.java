@@ -20,6 +20,10 @@ public class UserPermissionInit implements ApplicationListener<ContextRefreshedE
     @Autowired
     private PermissionMapper permissionMapper;
 
+/*
+    @PreAuthorize("hasAuthority('manager-updatePortAuth')")
+*/
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         Map<String, Object> beans = event.getApplicationContext().getBeansWithAnnotation(Controller.class);
@@ -33,7 +37,7 @@ public class UserPermissionInit implements ApplicationListener<ContextRefreshedE
                     String methodName = cs[0] + "-" + mt.getName();
                     Permission ps = new Permission();
                     ps.setPermissionMethods(methodName);
-                    ps.setDescript(annotation.value().substring(9, annotation.value().length() - 2));
+                    ps.setDescript(annotation.value().substring(14, annotation.value().length() - 2));
                     permissions.add(ps);
                 }
             }
