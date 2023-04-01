@@ -21,6 +21,6 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, account, descript
     from permission_mapping
-    where account = #{0}
+    where account = #{0} order by id
   </select>
 </mapper>

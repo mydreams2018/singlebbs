@@ -39,6 +39,6 @@
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, auth_account, port_id, port_type, auth_date, auth_flag, class_id
-    from auth_log
+    from auth_log order by id
   </select>
 </mapper>

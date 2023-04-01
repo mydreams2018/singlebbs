@@ -2,10 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.kungreat.singlebbs.mapper.PermissionMapper">
   <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.Permission">
+    <result column="id" property="id" />
     <result column="permission_methods" property="permissionMethods" />
     <result column="descript" property="descript" />
   </resultMap>
-  <insert id="insert" parameterType="cn.kungreat.singlebbs.domain.Permission">
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.Permission" useGeneratedKeys="true">
     insert into permission (permission_methods, descript)
     values (#{permissionMethods,jdbcType=VARCHAR}, #{descript,jdbcType=VARCHAR})
   </insert>
@@ -33,12 +34,12 @@
     )
   </delete>
   <select id="selectAll" resultMap="BaseResultMap">
-    select permission_methods, descript
-    from permission
+    select id, permission_methods, descript
+    from permission order by id
   </select>
 
   <select id="selectPermissions" resultType="java.lang.String">
       select descript from permission_mapping
-      where account = #{0}
+      where account = #{0} order by id
   </select>
 </mapper>

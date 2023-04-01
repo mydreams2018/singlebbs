@@ -38,4 +38,8 @@ public class ReportQuery extends Paging{
         }
         return tableName;
     }
+
+    public String getOrderType() {
+        return OrderFiled.ORDER_VALUES.contains(orderType)?orderType:null;
+    }
 }

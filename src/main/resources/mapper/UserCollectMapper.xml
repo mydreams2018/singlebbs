@@ -32,7 +32,7 @@
 
   <select id="selectAll" resultMap="BaseResultMap">
     select id, user_account, class_id, port_id, collect_time, port_title
-    from user_collect where user_account=#{userAccount} <include refid="collectionQuery" /> limit #{start},#{pageSize}
+    from user_collect where user_account=#{userAccount} <include refid="collectionQuery" /> order by id limit #{start},#{pageSize}
   </select>
 
     <select id="selectCount" resultType="java.lang.Integer">

@@ -6,6 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Permission {
+    private Integer id;
     private String permissionMethods;
 
     private String descript;
