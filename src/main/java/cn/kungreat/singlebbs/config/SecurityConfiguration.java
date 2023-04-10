@@ -9,22 +9,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.session.SessionManagementFilter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -36,8 +28,6 @@ public class SecurityConfiguration {
     private SuccessHandler successHandler;
     @Autowired
     private FaliureHandler faliureHandler;
-    @Autowired
-    private PersistentTokenRepository tokenRepository;
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
     @Autowired
@@ -82,17 +72,7 @@ public class SecurityConfiguration {
                 .and()
                 .logout().logoutUrl("/clearAll").clearAuthentication(true)
                 .invalidateHttpSession(true).deleteCookies("JSESSIONID","jwtToken","remember-me")
-                .logoutSuccessHandler(new LogoutHandler())
-                .and()
-                .rememberMe().tokenRepository(tokenRepository)
-                .tokenValiditySeconds(60 * 10080)
-                .userDetailsService(userDetailsService).authenticationSuccessHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                        String path = request.getRequestURI().substring(request.getContextPath().length());
-                        request.getRequestDispatcher(path).forward(request, response);
-                    }
-                });
+                .logoutSuccessHandler(new LogoutHandler());
         return http.build();
     }
 

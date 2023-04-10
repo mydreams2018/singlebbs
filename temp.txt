@@ -1,0 +1,20 @@
+
+                 @Bean
+                    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource){
+                        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+                        tokenRepository.setDataSource(dataSource);
+                        //启动创建 一个数据表用来存放token   只能用一次
+                //		tokenRepository.setCreateTableOnStartup(true);
+                        return tokenRepository;
+                    }
+
+                .and()
+                .rememberMe().tokenRepository(tokenRepository)
+                .tokenValiditySeconds(60 * 10080)
+                .userDetailsService(userDetailsService).authenticationSuccessHandler(new AuthenticationSuccessHandler() {
+                    @Override
+                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                        String path = request.getRequestURI().substring(request.getContextPath().length());
+                        request.getRequestDispatcher(path).forward(request, response);
+                    }
+                });

@@ -12,11 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.servlet.Filter;
-import javax.sql.DataSource;
 
 @Configuration
 public class BeanConfig {
@@ -56,12 +53,4 @@ public class BeanConfig {
         return new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository,"/authorization/login");
     }
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource){
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        //启动创建 一个数据表用来存放token   只能用一次
-//		tokenRepository.setCreateTableOnStartup(true);
-        return tokenRepository;
-    }
 }
