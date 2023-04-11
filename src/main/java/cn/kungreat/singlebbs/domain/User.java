@@ -42,8 +42,8 @@ public class User{
         }
         if(StringUtils.isEmpty(alias)){
             builder.append("别名不能为空,");
-        }else if(alias.length() > 6){
-            builder.append("别名只能6位,");
+        }else if(alias.length() > 12){
+            builder.append("别名只能12位,");
         }else if(alias.equals("游客")){
             builder.append("别名不能用游客,");
         }
