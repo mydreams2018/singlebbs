@@ -93,11 +93,15 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         String s = record.validMessage();
         Assert.isTrue(StringUtils.isEmpty(s),s);
         record.setIsPort(false);
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        record.setUserAccount(name);
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        record.setUserAccount(loginUser.getName());
         Date date = new Date();
         record.setCreateData(date);
-        record.setAuthFlag(portIsauth);
+        if(loginUser.getUser().getIsManager() == 1){
+            record.setAuthFlag(1);
+        }else{
+            record.setAuthFlag(portIsauth);
+        }
         detailsTextMapper.insert(record);
         Report report = new Report();
         report.setClassId(record.getClassId());
@@ -189,9 +193,13 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         Assert.isTrue(query.getId()!=null,"ID异常");
         DetailsText detailsText = detailsTextMapper.selectByPrimaryKeyUpdate(query);
         Assert.isTrue(detailsText!=null,"贴子异常");
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(name.equals(detailsText.getUserAccount()),"无权限操作此贴");
-        query.setAuthFlag(portIsauth);
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Assert.isTrue(loginUser.getName().equals(detailsText.getUserAccount()),"无权限操作此贴");
+        if(loginUser.getUser().getIsManager() == 1){
+            query.setAuthFlag(1);
+        }else{
+            query.setAuthFlag(portIsauth);
+        }
         query.setUpdateTime(System.currentTimeMillis());
         detailsTextMapper.updateByPrimaryKey(query);
     }

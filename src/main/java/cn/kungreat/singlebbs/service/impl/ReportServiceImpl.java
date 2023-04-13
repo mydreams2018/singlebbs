@@ -7,6 +7,7 @@ import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ReportMapper;
 import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
+import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.ReportService;
 import cn.kungreat.singlebbs.service.UserService;
 import cn.kungreat.singlebbs.vo.QueryResult;
@@ -47,23 +48,31 @@ public class ReportServiceImpl implements ReportService {
     public long insert(Report record) {
         String s = record.validMessage();
         Assert.isTrue(StringUtils.isEmpty(s),s);
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(record.getExperience() != null && record.getExperience() > 0){
-            userService.updateAccumulatePoints(-record.getExperience(),name);
+            userService.updateAccumulatePoints(-record.getExperience(),loginUser.getName());
         }
-        record.setUserAccount(name);
+        record.setUserAccount(loginUser.getName());
         Date date = new Date();
         record.setCreateTime(date);
-        record.setAuthFlag(portIsauth);
+        if(loginUser.getUser().getIsManager() == 1){
+            record.setAuthFlag(1);
+        }else{
+            record.setAuthFlag(portIsauth);
+        }
         reportMapper.insert(record);
         DetailsText details = new DetailsText();
         details.setIsPort(true);
         details.setCreateData(date);
         details.setPortId(record.getId());
         details.setDetailsText(record.getDetailsText());
-        details.setUserAccount(name);
+        details.setUserAccount(loginUser.getName());
         details.setClassId(record.getClassId());
-        details.setAuthFlag(portIsauth);
+        if(loginUser.getUser().getIsManager() == 1){
+            details.setAuthFlag(1);
+        }else{
+            details.setAuthFlag(portIsauth);
+        }
         detailsTextMapper.insert(details);
         return 1;
     }
@@ -76,9 +85,13 @@ public class ReportServiceImpl implements ReportService {
         Assert.isTrue(StringUtils.isNotEmpty(record.getDetailsText()),"内容不能为空");
         Report port = reportMapper.selectById(record);
         Assert.isTrue(port != null,"贴子异常");
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Assert.isTrue(name.equals(port.getUserAccount()),"没有权限操作");
-        record.setAuthFlag(portIsauth);
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Assert.isTrue(loginUser.getName().equals(port.getUserAccount()),"没有权限操作");
+        if(loginUser.getUser().getIsManager() == 1){
+            record.setAuthFlag(1);
+        }else{
+            record.setAuthFlag(portIsauth);
+        }
         long currentTimeMillis = System.currentTimeMillis();
         record.setUpdateTime(currentTimeMillis);
         reportMapper.updateByPrimaryKey(record);
@@ -86,7 +99,11 @@ public class ReportServiceImpl implements ReportService {
         detailsText.setClassId(record.getClassId());
         detailsText.setPortId(record.getId());
         detailsText.setDetailsText(record.getDetailsText());
-        detailsText.setAuthFlag(portIsauth);
+        if(loginUser.getUser().getIsManager() == 1){
+            detailsText.setAuthFlag(1);
+        }else{
+            detailsText.setAuthFlag(portIsauth);
+        }
         detailsText.setUpdateTime(currentTimeMillis);
         detailsTextMapper.updateByPortId(detailsText);
         return 1;
