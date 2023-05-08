@@ -129,22 +129,22 @@
         from (
         (select id, details_text, port_id,create_data, auth_describe, auth_flag,
         '1' as class_id from details_text_back
-        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        where auth_flag = #{authFlag} and is_port != 1 <include refid="replyPortQuery" />
         ORDER BY create_data DESC limit #{start},#{pageSize})
         UNION ALL
         (select id, details_text, port_id,create_data, auth_describe, auth_flag,
         '2' as class_id from details_text_front
-        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        where auth_flag = #{authFlag} and is_port != 1 <include refid="replyPortQuery" />
         ORDER BY create_data DESC limit #{start},#{pageSize})
         UNION ALL
         (select id, details_text, port_id,create_data, auth_describe, auth_flag,
         '3' as class_id from details_text_data
-        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        where auth_flag = #{authFlag} and is_port != 1 <include refid="replyPortQuery" />
         ORDER BY create_data DESC limit #{start},#{pageSize})
         UNION ALL
         (select id, details_text, port_id,create_data, auth_describe, auth_flag,
         '4' as class_id from details_text_talk
-        where auth_flag = #{authFlag}  <include refid="replyPortQuery" />
+        where auth_flag = #{authFlag} and is_port != 1 <include refid="replyPortQuery" />
         ORDER BY create_data DESC limit #{start},#{pageSize})
         ) as rt
     </select>
