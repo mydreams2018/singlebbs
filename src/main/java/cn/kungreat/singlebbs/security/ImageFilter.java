@@ -41,7 +41,7 @@ public class ImageFilter extends OncePerRequestFilter {
             Object tarCode = request.getParameter("image_code");
             if(code == null || obj ==null || time > 60000 || tarCode ==null || Calculator.count(code.toString()) != Integer.parseInt(tarCode.toString())){
                 response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write(SinglebbsApplication.MAP_JSON.writeValueAsString(new JsonResult(false,"验证码错误-或者超时",null,0,"imgCode")));
+                response.getWriter().write(SinglebbsApplication.MAP_JSON.writeValueAsString(new JsonResult(false,"验证码错误|或者超时,请注意计算优先级",null,0,"imgCode")));
                 return;
             }
         }
