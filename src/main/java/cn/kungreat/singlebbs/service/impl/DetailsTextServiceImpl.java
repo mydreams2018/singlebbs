@@ -7,7 +7,6 @@ import cn.kungreat.singlebbs.mapper.DetailsTextMapper;
 import cn.kungreat.singlebbs.mapper.ReportMapper;
 import cn.kungreat.singlebbs.mapper.UserMapper;
 import cn.kungreat.singlebbs.query.DetailsTextQuery;
-import cn.kungreat.singlebbs.query.UserMessageQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.DetailsTextService;
@@ -149,9 +148,6 @@ public class DetailsTextServiceImpl implements DetailsTextService {
                 userMapper.updateAccumulatePoints(user.getAccumulatePoints()-report.getExperience(),user.getAccumulatePoints(),name, UserAccumulate.countVipLevel(user.getAccumulatePoints()-report.getExperience()));
             }
         }
-        UserMessageQuery messageQuery = new UserMessageQuery();
-        messageQuery.setClassId(query.getClassId());
-        messageQuery.setDetailsId(query.getId());
         return detailsTextMapper.deleteByPrimaryKey(query);
     }
 
