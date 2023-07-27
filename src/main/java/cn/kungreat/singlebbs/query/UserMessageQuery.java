@@ -5,10 +5,11 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class UserMessageQuery {
-    private String alias;
+public class UserMessageQuery extends Paging {
+    private String userAccount;
     private Integer classId;
     private Long detailsId;
     private Long portId;
-    private Integer deleteNum;
+    private Integer msgState;
+    private Long id;
 }

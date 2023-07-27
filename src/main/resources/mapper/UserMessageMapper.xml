@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kungreat.singlebbs.mapper.UserMessageMapper">
+  <resultMap id="BaseResultMap" type="cn.kungreat.singlebbs.domain.UserMessage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="port_id" jdbcType="BIGINT" property="portId" />
+    <result column="details_id" jdbcType="BIGINT" property="detailsId" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="create_date" jdbcType="DATE" property="createDate" />
+    <result column="view_date" jdbcType="DATE" property="viewDate" />
+    <result column="msg_state" jdbcType="INTEGER" property="msgState" />
+    <result column="msg_type" jdbcType="INTEGER" property="msgType" />
+    <result column="msg_info" jdbcType="VARCHAR" property="msgInfo" />
+    <result column="auth_flag" jdbcType="INTEGER" property="authFlag" />
+  </resultMap>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.kungreat.singlebbs.domain.UserMessage" useGeneratedKeys="true">
+    insert into user_message (class_id, port_id, details_id, 
+      user_account, create_date,  msg_state, msg_type, msg_info, auth_flag)
+    values (#{classId,jdbcType=INTEGER}, #{portId,jdbcType=BIGINT}, #{detailsId,jdbcType=BIGINT}, 
+      #{userAccount,jdbcType=VARCHAR}, current_date(),
+      0, #{msgType,jdbcType=INTEGER}, #{msgInfo,jdbcType=VARCHAR},
+      #{authFlag,jdbcType=INTEGER})
+  </insert>
+
+  <update id="updateViewMessage" parameterType="cn.kungreat.singlebbs.domain.UserMessage">
+    update user_message
+    set view_date = current_date(), msg_state = #{msgState,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT} and user_account=#{userAccount}
+  </update>
+
+  <update id="updateAuthFlag" parameterType="cn.kungreat.singlebbs.domain.UserMessage">
+    update user_message
+    set auth_flag =  #{authFlag,jdbcType=INTEGER}
+    where class_id = #{classId,jdbcType=INTEGER} and details_id = #{detailsId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, class_id, port_id, details_id, user_account, create_date, view_date, msg_state,
+           msg_type, msg_info, auth_flag
+    from user_message  <include refid="baseQuery"/> ORDER BY create_date limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select id, class_id, port_id, details_id, user_account, create_date, view_date, msg_state,
+    msg_type, msg_info, auth_flag
+    from user_message where id = #{id}
+  </select>
+
+  <sql id="baseQuery">
+    <where>
+      <if test="userAccount != null and userAccount !=''">
+        and user_account = #{userAccount}
+      </if>
+      <if test="msgState != null">
+        and msg_state = #{msgState}
+      </if>
+    </where>
+  </sql>
+
+</mapper>
