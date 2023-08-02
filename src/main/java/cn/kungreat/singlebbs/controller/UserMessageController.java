@@ -22,11 +22,11 @@ public class UserMessageController {
         return userMessageService.selectAll(userMessageQuery);
     }
 
-    @RequestMapping(value = "/selectDetailsText",method = RequestMethod.POST)
-    public JsonResult selectDetailsText(UserMessageQuery userMessageQuery){
+    @RequestMapping(value = "/updateMsgState",method = RequestMethod.POST)
+    public JsonResult updateMsgState(UserMessageQuery userMessageQuery){
         JsonResult jsonResult = new JsonResult();
         try {
-            jsonResult.setMsg(userMessageService.selectDetailsText(userMessageQuery).getDetailsText());
+            userMessageService.updateMsgState(userMessageQuery);
         }catch(Exception e){
             jsonResult.setResult(false);
             jsonResult.setStatus(0);

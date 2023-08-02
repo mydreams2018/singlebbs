@@ -27,3 +27,44 @@ end
 $$
 delimiter ;
 执行以下脚本=====>  end
+
+
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+delimiter $$
+drop function if exists get_port_title$$
+create function get_port_title(in_id bigint,in_table bigint) returns varchar(255)
+begin
+ declare portTitle varchar(255) default '';
+    IF in_table=1 THEN
+        select port_title into portTitle from report_back where id = in_id;
+    ELSEIF in_table=2 THEN
+        select port_title into portTitle from report_front where id = in_id;
+    ELSEIF in_table=3 THEN
+        select port_title into portTitle from report_data where id = in_id;
+    ELSEIF in_table=4 THEN
+      select port_title into portTitle from report_talk where id = in_id;
+    END IF;
+ return portTitle;
+end
+$$
+delimiter ;
+
+delimiter $$
+drop function if exists get_reply_details$$
+create function get_reply_details(in_id bigint,in_table bigint) returns text
+begin
+ declare replyDetails text default '';
+    IF in_table=1 THEN
+        select details_text into replyDetails from details_text_back where id = in_id and auth_flag =1;
+    ELSEIF in_table=2 THEN
+        select details_text into replyDetails from details_text_front where id = in_id and auth_flag =1;
+    ELSEIF in_table=3 THEN
+        select details_text into replyDetails from details_text_data where id = in_id and auth_flag =1;
+    ELSEIF in_table=4 THEN
+      select details_text into replyDetails from details_text_talk where id = in_id and auth_flag =1;
+    END IF;
+ return replyDetails;
+end
+$$
+delimiter ;

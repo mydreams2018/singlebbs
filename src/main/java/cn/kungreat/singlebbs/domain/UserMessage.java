@@ -1,5 +1,6 @@
 package cn.kungreat.singlebbs.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,13 +13,14 @@ public class UserMessage {
     private Integer classId;
 
     private Long portId;
-
+    private String portTitle;
     private Long detailsId;
 
+    private String detailsText;
     private String userAccount;
-
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date createDate;
-
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date viewDate;
 
     private Integer msgState;
@@ -28,5 +30,7 @@ public class UserMessage {
     private String msgInfo;
 
     private Integer authFlag;
+
+    private String userAlias;
 
 }

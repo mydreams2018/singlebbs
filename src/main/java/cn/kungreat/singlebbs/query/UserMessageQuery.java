@@ -12,4 +12,6 @@ public class UserMessageQuery extends Paging {
     private Long portId;
     private Integer msgState;
     private Long id;
+    private Integer authFlag;
+
 }
