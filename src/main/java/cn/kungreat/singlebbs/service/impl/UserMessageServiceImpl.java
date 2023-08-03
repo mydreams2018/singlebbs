@@ -68,14 +68,20 @@ public class UserMessageServiceImpl implements UserMessageService {
             detailsTextQuery.setId(record.getReplyParent());
             DetailsText detailsText = detailsTextMapper.selectByPrimaryKeyUpdate(detailsTextQuery);
             Assert.isTrue(detailsText != null,"数据异常...");
+            if(detailsText.getUserAccount().equals(record.getUserAccount())){
+                return 0;//自已回复自已
+            }
             userMessage.setUserAccount(detailsText.getUserAccount());
-        }else{
+        }else {
             userMessage.setMsgType(2);
             Report report = new Report();
             report.setClassId(record.getClassId());
             report.setId(record.getPortId());
             Report selectById = reportMapper.selectById(report);
             Assert.isTrue(selectById != null,"数据异常...");
+            if(selectById.getUserAccount().equals(record.getUserAccount())){
+                return 0;//自已回复自已
+            }
             userMessage.setUserAccount(selectById.getUserAccount());
         }
         return userMessageMapper.insert(userMessage);
