@@ -7,6 +7,7 @@ import cn.kungreat.singlebbs.query.ReportQuery;
 import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.service.CollaborationCompanyService;
 import cn.kungreat.singlebbs.service.ManagerService;
+import cn.kungreat.singlebbs.service.UserMessageService;
 import cn.kungreat.singlebbs.util.InvalidUserCacle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +33,8 @@ public class ManagerServiceImpl implements ManagerService {
     private UserMapper userMapper;
     @Autowired
     private CollaborationCompanyService collaborationCompanyService;
+    @Autowired
+    private UserMessageService userMessageService;
 
     @Override
     public List<Report> getAllPorts(ReportQuery reportQuery) {
@@ -89,6 +92,7 @@ public class ManagerServiceImpl implements ManagerService {
         Assert.isTrue(record.getId() != null, "ID异常");
         managerMapper.updateReplyPortAuth(record);
         insertAuthLog(record);
+        userMessageService.updateAuthFlag(record);//更新站内信审核状态
     }
 
     @Override

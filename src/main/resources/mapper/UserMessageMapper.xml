@@ -35,7 +35,7 @@
   <update id="updateAuthFlag" parameterType="cn.kungreat.singlebbs.domain.UserMessage">
     update user_message
     set auth_flag =  #{authFlag,jdbcType=INTEGER}
-    where class_id = #{classId,jdbcType=INTEGER} and details_id = #{detailsId,jdbcType=BIGINT}
+    where auth_flag != 1 and class_id = #{classId,jdbcType=INTEGER} and details_id = #{detailsId,jdbcType=BIGINT}
   </update>
 
   <select id="selectAll" resultMap="BaseResultMap">

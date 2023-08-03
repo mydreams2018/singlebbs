@@ -37,7 +37,7 @@
       user_account, create_data, auth_flag,
       details_text, is_port,reply_parent,auth_describe)
     values (0, 0,#{portId},
-      #{userAccount}, #{createData}, #{authFlag},
+      #{userAccount}, current_date(), #{authFlag},
       #{detailsText}, #{isPort}, #{replyParent},#{authDescribe})
   </insert>
     <update id="updateByPrimaryKey">

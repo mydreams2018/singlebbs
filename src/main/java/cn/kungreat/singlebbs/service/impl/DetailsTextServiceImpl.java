@@ -11,6 +11,7 @@ import cn.kungreat.singlebbs.query.UserQuery;
 import cn.kungreat.singlebbs.security.LoginUser;
 import cn.kungreat.singlebbs.service.DetailsTextService;
 import cn.kungreat.singlebbs.service.ReportService;
+import cn.kungreat.singlebbs.service.UserMessageService;
 import cn.kungreat.singlebbs.service.UserReplyPortService;
 import cn.kungreat.singlebbs.util.UserAccumulate;
 import cn.kungreat.singlebbs.vo.QueryResult;
@@ -39,6 +40,8 @@ public class DetailsTextServiceImpl implements DetailsTextService {
     private UserMapper userMapper;
     @Autowired
     private UserReplyPortService userReplyPortService;
+    @Autowired
+    private UserMessageService userMessageService;
     @Override
     public QueryResult queryReport(DetailsTextQuery query) {
         Assert.isTrue(query.getClassId()!=null&&query.getClassId()>=1&&query.getClassId()<5,"类型ID异常");
@@ -94,8 +97,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         record.setIsPort(false);
         LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         record.setUserAccount(loginUser.getName());
-        Date date = new Date();
-        record.setCreateData(date);
+        record.setAlias(loginUser.getAlias());
         if(loginUser.getUser().getIsManager() == 1){
             record.setAuthFlag(1);
         }else{
@@ -107,6 +109,7 @@ public class DetailsTextServiceImpl implements DetailsTextService {
         report.setId(record.getPortId());
         reportService.incrementNumber(report);
         userReplyPortService.updateByPrimaryKey();//用户周回贴统计
+        userMessageService.insertUserMessage(record);//站内信设计
         return record.getId();
     }
 
